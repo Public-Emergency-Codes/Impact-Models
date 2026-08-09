@@ -1,0 +1,11 @@
+PEC prospective release: pec-prospective-2026-08-09-r9
+Release date: 2026-08-09
+Python: 3.13.11
+NumPy: 2.4.1
+SciPy: 1.17.0
+Pandas: 2.3.3
+pypdf: 6.7.1
+latexmk: 4.87
+pdfTeX: 3.141592653-2.6-1.40.28 (TeX Live 2025)
+Locale/language: English
+Primary platform: Linux x86_64

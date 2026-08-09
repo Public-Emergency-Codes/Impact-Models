@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this model or its outputs, please cite as follows."
+title: "Prospective Impact Models for Public Emergency Codes Deployment"
+type: software
+authors:
+  - name: "Public Emergency Codes"
+    website: "https://github.com/public-emergency-codes"
+date-released: "2026-08-09"
+version: "pec-prospective-2026-08-09-r9"
+abstract: >-
+  Pre-deployment prospective probabilistic models estimating conditional
+  outcome distributions under future Public Emergency Codes (PEC) deployment
+  scenarios. Includes a mortality planning analysis and a U.S. economic-value
+  analysis coupled to the mortality model. The models do not estimate observed
+  PEC causal effects; they propagate uncertainty in adoption, reach, technical
+  completion, receiving-system compatibility, pathway relevance, clinical
+  effects, adverse effects, and economic consequences.
+keywords:
+  - "public emergency codes"
+  - "prospective modeling"
+  - "mortality"
+  - "economic evaluation"
+  - "probabilistic simulation"
+  - "Monte Carlo"
+license:
+  - "0BSD"
+  - "CC0-1.0"
+repository-code: "https://github.com/public-emergency-codes/pec-prospective-impact-models"
+url: "https://github.com/public-emergency-codes/pec-prospective-impact-models"

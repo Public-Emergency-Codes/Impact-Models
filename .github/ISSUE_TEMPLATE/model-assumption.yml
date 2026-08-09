@@ -1,0 +1,78 @@
+name: Model assumption proposal
+description: Propose a change to a probability distribution, causal parameter, cost input, or evidence source
+title: "[Assumption] "
+labels: [model-assumption]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to propose a replacement distribution, causal
+        parameter, cost input, or primary source. See `CONTRIBUTING.md`
+        for full guidance.
+
+  - type: input
+    id: parameter
+    attributes:
+      label: Parameter definition and unit
+      description: The exact parameter name in `config/` or `pec_model/economic_inputs.py`
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current specification
+      description: The current distribution form, parameters, and source
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed specification
+      description: The proposed distribution form, parameters, and rationale
+    validations:
+      required: true
+
+  - type: input
+    id: primary_source
+    attributes:
+      label: Primary source and data year
+      description: Full citation with population, geography, endpoint, and data year
+    validations:
+      required: true
+
+  - type: textarea
+    id: transportability
+    attributes:
+      label: Transportability rationale
+      description: Why does this evidence apply to the PEC deployment population and setting?
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependence
+    attributes:
+      label: Expected dependence with other inputs
+      description: Which other model inputs are correlated with this parameter, and how?
+
+  - type: textarea
+    id: sensitivity
+    attributes:
+      label: Sensitivity results
+      description: If you have run both specifications, report the impact on headline outputs
+      placeholder: |
+        | Output | Current | Proposed |
+        |--------|---------|----------|
+        | Mean net lives | ... | ... |
+        | Median BCR | ... | ... |
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission checklist
+      options:
+        - label: This proposal does not describe scenario output as an observed PEC effect
+          required: true
+        - label: Source provenance is documented for every empirical input
+          required: true

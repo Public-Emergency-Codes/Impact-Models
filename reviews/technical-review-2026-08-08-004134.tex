@@ -1,0 +1,373 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip}
+\setlength{\emergencystretch}{3em}
+\setlist{nosep,leftmargin=1.5em}
+\urlstyle{same}
+
+\title{Technical Review of\\
+\emph{Public Emergency Codes: Evidence Estimate and Full-Implementation Potential}}
+\author{}
+\date{August 8, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The manuscript has a useful high-level distinction between a current-evidence
+estimand and a mature-implementation counterfactual, and the reported
+deterministic arithmetic is internally correct.  Running
+\texttt{pec\_evidence\_simulation.py} and
+\texttt{pec\_full\_potential\_simulation.py} with the stated seeds reproduces
+the numerical tables.  Equations (2) and (3) are dimensionally consistent if
+$k$ is interpreted exactly as a relative survival change per minute.  The
+reported per-million rates and the sum of the pathway values in Table 7 also
+check arithmetically.
+
+The paper nevertheless requires major revision before its headline numbers can
+be described as evidence-supported estimates.  The principal problem is not
+arithmetic; it is causal identification.  Every positive component of the
+$66.88$-life modal calculation depends on at least one judgmental causal or
+PEC-attribution parameter that is not estimated by the cited studies.  The
+$2{,}287$ full-implementation value relies on a second, much larger set of
+unsourced absolute mortality-risk changes.  These calculations can be retained
+as transparent planning scenarios, but the present labels overstate what the
+evidence identifies.
+
+No inverse-trigonometric expressions, coordinate transformations, or branch
+choices occur in the manuscript, so no branch or quadrant defect was found.
+The current-model sign convention is clear.  The full-potential notation and
+the treatment of overlapping pathways remain implementation-ambiguous, as
+detailed below.
+
+\section*{Highest-priority technical findings}
+
+\subsection*{1. The ``current-evidence'' point estimate is not identified by current PEC evidence}
+
+\textbf{Classification: unsupported claim.}
+
+\textbf{Location.} Abstract; Sections 1, 5.1, 7, and 8; Equation (1).
+
+\textbf{Problem.} The modal 988 contribution is
+\[
+L_{988}=\frac{4{,}372}{2.5}(0.04)(0.50)=34.98,
+\]
+which is approximately $52\%$ of the headline $66.88$ lives/year.  The source
+study estimates an association for the entire national 988 rollout, whereas
+the PEC share $g$ and causal-attribution factor $c$ are elicited planning
+assumptions.  The manuscript explicitly acknowledges that there is no direct
+PEC trial, but then describes the resulting positive value as supported by
+current direct evidence.  Neither the $4\%$ mode for $g$ nor the $50\%$ mode
+for $c$ is estimated from the cited awareness/use survey.
+
+The other two positive modules also require the assumed slope $k$.  Thus the
+full $66.88$-life modal result is a scenario conditional on causal assumptions,
+not an evidence-identified PEC effect.
+
+\textbf{Why it matters.} The central interpretation of the paper depends on a
+claimed separation between evidence-supported lives and speculative potential.
+The present construction does not maintain that separation.
+
+\textbf{Suggested fix.} Report at least three layers separately:
+\begin{enumerate}
+\item observed external associations and measured process delays;
+\item a PEC-attribution scenario conditional on $g$, $c$, and $k$; and
+\item the mature full-implementation scenario.
+\end{enumerate}
+Rename $66.88$ the ``modal assumption-conditional current-deployment
+scenario,'' or set the evidence-only PEC mortality contribution to zero until
+PEC-specific attribution is measured.  If a positive current scenario is
+retained, provide an explicit elicitation method and sensitivity analysis for
+$g$ and $c$ rather than calling their ranges evidence-calibrated.
+
+\subsection*{2. The cited evidence does not establish the modeled OHCA survival slope $k$}
+
+\textbf{Classification: definite citation mismatch and unsupported causal
+conversion.}
+
+\textbf{Location.} Evidence-audit row ``Causal conversion to survival,''
+Table 4, Equations (2)--(3), and bibliography items
+\texttt{timecpr2026} and \texttt{responsetime2011}.
+
+\textbf{Problem.} The paper applies
+\[
+k=3/5/8\%\quad\text{relative survival gain per minute}
+\]
+to the national OHCA population.  The DOI given for
+\texttt{timecpr2026}, DOI
+\url{https://doi.org/10.1161/CIRCOUTCOMES.125.013166}, is a pediatric
+OHCA study: \emph{Time to Bystander Cardiopulmonary Resuscitation and Survival
+Outcomes in Pediatric Out-of-Hospital Cardiac Arrests in the United States}.
+The bibliography omits ``Pediatric'' and the rest of the actual title.  It
+cannot by itself justify applying one common slope to the overwhelmingly adult
+national OHCA population.
+
+The study cited as \texttt{responsetime2011} examined all high-priority urban
+EMS events rather than an OHCA-specific per-minute effect.  It reported a
+$0.7$ percentage-point mortality difference across an eight-minute threshold,
+with a $95\%$ confidence interval from $-0.5$ to $2.0$ percentage points and an
+adjusted odds-ratio confidence interval including one.  It therefore does not
+estimate the paper's positive $3$--$8\%$ relative gain per minute.
+
+\textbf{Why it matters.} $k$ multiplies both OHCA modules and is shared across
+their draws.  A population or estimand mismatch propagates directly into the
+language and access life estimates and their apparent precision.
+
+\textbf{Suggested fix.} Use an adult, OHCA-specific time-to-survival model and
+show the exact conversion from its reported estimand to a relative change per
+minute.  Prefer separate curves for time to CPR and time to patient contact;
+they are not necessarily exchangeable.  Stratify pediatric and adult cases if
+the pediatric source is retained.  Until an appropriate slope is justified,
+move these mortality components to a clearly labeled scenario or zero-centered
+sensitivity analysis.  Correct the bibliography title in all cases.
+
+The source identities can be checked at
+\url{https://www.ahajournals.org/doi/10.1161/CIRCOUTCOMES.125.013166}
+and \url{https://pubmed.ncbi.nlm.nih.gov/22026820/}.
+
+\subsection*{3. The full-implementation mortality effects are planning priors, not evidence-calibrated effects}
+
+\textbf{Classification: unsupported claim and reproducibility gap in the
+paper text.}
+
+\textbf{Location.} Section 9, Equation (7), Tables 7--8, and
+\texttt{pec\_full\_potential\_simulation.py}.
+
+\textbf{Problem.} The script contains low/mode/high distributions for
+$r_j$, beneficial absolute risk change, adverse absolute risk change,
+end-to-end success, and overlap for nine pathways.  Most of these distributions
+do not appear in the manuscript, and no source or elicitation procedure is
+given for the absolute mortality-risk changes.  Examples include the positive
+means assigned to 211 referral, 911 diversion, medical data/photo/video, and
+passive monitoring even though the evidence audit states that these pathways
+lack demonstrated mortality effects.  Mature implementation can increase
+delivery success, but it does not establish a clinical effect that is absent
+from the evidence.
+
+\textbf{Why it matters.} Table 7 exposes only the modal relevance, high
+success, net modal risk change, and high attribution used for one plug-in
+calculation.  A reader cannot reconstruct the $90\%$ interval from the paper,
+assess the plausibility of the tails, or determine which assumptions create the
+$3{,}054$ median without reading source code.  More importantly, the numerical
+range may be mistaken for empirically calibrated uncertainty.
+
+\textbf{Suggested fix.} Add a complete full-potential input table containing
+$I_j$, every low/mode/high tuple, parameter units, evidence tier, source, and
+elicitation rationale.  Mark unsupported mortality changes as expert-judgment
+priors.  Report a zero-mortality-effect version for Tier C pathways alongside
+the planning scenario.  Archive the exact script and a machine-readable input
+file with the paper.
+
+\subsection*{4. Scalar attribution factors do not resolve overlap or shared uncertainty}
+
+\textbf{Classification: likely upward point bias and likely understated
+aggregate uncertainty.}
+
+\textbf{Location.} Evidence-audit row ``Feature overlap and correlation,''
+Equation (7), Table 7, and the full-potential script.
+
+\textbf{Problem.} Several full-potential rows use the same
+$36.367261$-million treated-and-transported 911 denominator.  A single incident
+can simultaneously involve earlier 911 access, language support, location
+assistance, medical data, video, and contact alerts.  Multiplying each row by a
+separate $w_{F,j}$ does not make the rows mutually exclusive and does not show
+which pathway receives the shared outcome.
+
+The script also samples the major pathway inputs independently.  National
+adoption, device reach, platform reliability, PSAP compatibility, and causal
+credibility would create strong positive correlations across pathways.
+Independent sampling can make the aggregate interval artificially narrow even
+when every marginal range is wide.
+
+The current model similarly calls the language and access mechanisms
+``non-overlapping,'' although they can occur in the same OHCA.  Additivity may
+be defensible if the recovered times are sequential and the survival response
+is locally linear, but that assumption is not stated or tested.
+
+\textbf{Why it matters.} The headline full-potential result is a sum across
+pathways.  Double counting affects the point estimate, while omitted shared
+uncertainty affects the interval and threshold probabilities.
+
+\textbf{Suggested fix.} Use an incident-level model with mutually exclusive
+clinical states and explicit combinations of enabled functions.  Alternatively,
+define a formal allocation rule for overlapping risk reductions and show that
+the total change in an incident cannot exceed its baseline mortality risk.
+Introduce shared latent draws for national reach, user activation, technical
+success, and receiver compatibility, then report a dependence sensitivity
+analysis.
+
+\subsection*{5. The reported point summaries and interval terminology are internally inconsistent}
+
+\textbf{Classification: definite reporting inconsistency.}
+
+\textbf{Location.} Abstract and Tables 6--8.
+
+\textbf{Problem.} The manuscript calls $2{,}287$ the ``central''
+full-implementation potential, but its own simulation gives
+\[
+\Pr(L_F>2{,}287)=86.4\%.
+\]
+Thus the plug-in value is near the lower tail, not the center of the simulated
+distribution; the mean is $3{,}148$ and the median is $3{,}054$.  The analogous
+current calculation headlines the modal plug-in value $66.9$, whereas the
+predictive mean and median are approximately $75.7$ and $75.3$.
+
+Table 8 also labels the full-potential mean and median ``predictive,'' although
+the full-potential script adds parameter/scenario uncertainty only and does not
+simulate annual outcome noise.  By contrast, the current-evidence script does
+add an explicit annual-noise term.
+
+\textbf{Why it matters.} Readers may interpret $2{,}287$ as a median or
+expected value and the full interval as a predictive interval for future
+observed outcomes.  Neither interpretation matches the implementation.
+
+\textbf{Suggested fix.} Rename $2{,}287$ the ``joint modal-input plug-in
+scenario'' and use either the median or mean as the probabilistic headline.
+Use ``parameter-uncertainty interval'' or ``scenario interval'' for the full
+model unless outcome noise is actually added.  Apply the same point-summary
+convention to both estimands and state why that summary is decision-relevant.
+
+\subsection*{6. The benefit probabilities are dominated by subjective zero-centered budgets}
+
+\textbf{Classification: implementation-facing ambiguity and overstated
+precision.}
+
+\textbf{Location.} Section 5.4, Table 5, and Section 8.
+
+\textbf{Problem.} The six independent normal budgets have a combined standard
+deviation of
+\[
+\sqrt{35^2+12^2+10^2+8^2+18^2+25^2}=49.82
+\quad\text{lives/year}.
+\]
+In the reproduced simulation, the direct positive modules have a $5$th--$95$th
+percentile range of approximately $44.6$--$113.0$, whereas adding the
+zero-centered budgets expands it to approximately $-12.7$--$165.2$ before
+annual outcome noise.  Consequently, quantities such as
+$\Pr(L_{\mathrm{net}}>0)=91.7\%$ depend strongly on six unvalidated standard
+deviations and their assumed independence.
+
+The added annual noise is described only as a normal approximation with
+standard deviation $\sqrt{\max(L_{\mathrm{direct}},1)}$.  No outcome-generating
+argument is given for that form, and negative contributions preclude a direct
+Poisson interpretation.
+
+\textbf{Why it matters.} The threshold probabilities can look like inferential
+probabilities derived from data even though they are primarily conditional on
+planning-budget choices.
+
+\textbf{Suggested fix.} Label these outputs prior-predictive or
+assumption-conditional.  Report results with the budgets removed and with all
+$\sigma_m$ multiplied by, for example, $0.5$, $1$, and $2$.  Justify their
+dependence structure.  Either derive the annual-noise model from explicit event
+counts or omit it and call the result a parameter-uncertainty distribution.
+
+\subsection*{7. The national OHCA expansion needs a defensible denominator model}
+
+\textbf{Classification: likely issue requiring external verification.}
+
+\textbf{Location.} Section 2 and Table 4.
+
+\textbf{Problem.} The calculation $137{,}119/0.56\approx245{,}000$ treats the
+rounded CARES population-coverage percentage as though it were an exact case
+sampling fraction with nationally representative incidence.  CARES describes a
+catchment population, not a probability sample of U.S. OHCA events.  Geographic
+differences in age, incidence, EMS participation, and case capture can make a
+simple inverse-coverage expansion biased.
+
+\textbf{Why it matters.} Both positive OHCA modules scale linearly with this
+anchor, and the same anchor is used in the full-potential model.
+
+\textbf{Suggested fix.} Use the exact covered population and a documented
+age-/sex-standardized national incidence estimate, or retain the expansion but
+give it an uncertainty distribution and sensitivity analysis.  State explicitly
+whether the numerator and coverage percentage use identical case definitions
+and dates.
+
+\section*{Notation and equation audit}
+
+\begin{itemize}
+\item $L_E$ is defined in Section 1 but is not subsequently used; the paper
+switches to $L_{\mathrm{net}}$ and $L_{\mathrm{net,base}}$.  Define
+$L_E\equiv L_{\mathrm{net}}$ for the current-evidence model or use one symbol
+throughout.
+\item In Equation (7), $\Delta_j$ and $h_j$ require explicit units and verbal
+definitions.  Table 7 instead uses ``Net $\Delta p$,'' while the code uses
+separate beneficial and adverse absolute risk changes.  Use one notation and
+state that $\Delta_j-h_j$ is an absolute probability change per relevant,
+successfully implemented incident.
+\item The descriptors for $N_{\mathrm{OHCA}}$, $\pi_{\mathrm{LEP}}$,
+$u_{\mathrm{LEP}}$, $\pi_A$, and $u_A$ are locally consistent.  However,
+$\pi_{\mathrm{LEP}}$ is transferred from sampled medical 911 calls to OHCA and
+$\pi_A$ is a planning sensitivity range.  Mark both as transported assumptions,
+not OHCA-specific prevalence estimates.
+\item Equations (2)--(3) have correct dimensions only under the relative-slope
+interpretation of $k$.  If a source reports an absolute percentage-point change,
+the equations and numerical inputs must be changed rather than inserting that
+estimate directly as $k$.
+\end{itemize}
+
+\section*{Meaningful editorial and statistical-language issues}
+
+\begin{itemize}
+\item Table 2 says randomized video evidence ``found no mortality difference.''
+Failure to reject a difference is not evidence of equivalence.  Replace this
+with ``did not detect a statistically significant difference in 30-day
+mortality'' and report the estimate and confidence interval if mortality is
+used to justify a zero-centered prior.
+\item Replace repeated phrases such as ``the current-evidence estimate is about
+$67$'' with ``the modal plug-in scenario is about $67$'' unless the causal
+parameters are empirically identified.
+\item Table 1 places ``federal estimate'' in the ``Data year'' column for 911
+calls.  Give the source publication year and access date, and distinguish a
+current count from an older planning estimate.
+\item The supplied-workspace documents cited as \texttt{pecinputs} and
+\texttt{pecfunctions} are load-bearing sources for the full-potential
+assumptions.  They should be included in the reproducibility archive or their
+relevant content should be reproduced in the paper.
+\end{itemize}
+
+\section*{Proofing sweep}
+
+The required mechanical scan was run on the compiled manuscript and its hits
+were spot-checked.  The following high-confidence corrections remain:
+\begin{itemize}
+\item \textbf{Bibliography, \texttt{samhsa988}:} the identical ``Source page''
+hyperlink is printed twice.  Delete one copy.
+\item \textbf{Bibliography, \texttt{timecpr2026}:} restore the complete title,
+including ``Survival Outcomes in Pediatric Out-of-Hospital Cardiac Arrests in
+the United States,'' and add the authors, volume/issue or online-publication
+details, and DOI in normal citation form.
+\item \textbf{Table 2:} change ``found no mortality difference'' to the
+non-equivalence wording recommended above.
+\end{itemize}
+
+No duplicated comma/period artifact, malformed ``into ... into'' derivation
+frame, product-name capitalization error, or \texttt{arctan(x/y)} branch pattern
+was confirmed.  The scan's semicolon-capitalization candidate in the Table 7
+caption is grammatical because ``Function 9'' is a numbered proper label.
+
+\section*{Highest-priority revision sequence}
+
+\begin{enumerate}
+\item Reclassify $66.88$ as an assumption-conditional scenario, or remove
+positive PEC mortality attribution that is not empirically identified.
+\item Replace or stratify the evidence for $k$ and show the exact causal
+conversion from source estimates to the model parameter.
+\item Publish every full-potential input and its evidentiary or elicitation
+basis; add a Tier-C-zero scenario.
+\item Rebuild overlap and dependence handling at the incident level or provide
+a formal allocation and shared-factor sensitivity analysis.
+\item Make the headline summary, interval terminology, and simulation code use
+the same estimand definitions.
+\item Correct the bibliography and statistical wording, then rerun both scripts
+and update the abstract and quoted-result boxes from the revised model.
+\end{enumerate}
+
+\end{document}

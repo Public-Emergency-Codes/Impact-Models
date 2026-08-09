@@ -1,0 +1,407 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,tabularx,array}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip}
+\setlength{\emergencystretch}{3em}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\title{Technical Review of\\
+\emph{Public Emergency Codes: Evidence Audit, Assumption-Conditional Mortality
+Scenarios, and Full-Implementation Potential}}
+\author{}
+\date{August 8, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The manuscript is substantially clearer than a conventional ``lives saved''
+projection about the distinction between identified evidence and
+assumption-conditional planning.  The full manuscript, equations, appendices
+embedded in the main text, executable mortality scripts, JSON inputs and
+outputs, source transcriptions, tables, captions, and bibliography were
+reviewed.  Both mortality simulations were rerun in an isolated copy of the
+workspace and reproduced the archived JSON outputs byte-for-byte.  The
+manuscript also compiles successfully as a 13-page PDF.
+
+Major revision is still needed.  The current-deployment result is called a
+\emph{net} mortality benefit even though its executable model contains only
+nonnegative benefit terms.  Its dominant external 988 association is treated
+as fixed despite a published confidence interval.  In the mature model, only
+five acute-EMS rows are made mutually exclusive; the remaining call, contact,
+request, response, and population denominators can overlap each other and the
+acute pathways.  The OHCA row is also embedded in a transported-EMS partition
+even though its source denominator includes EMS-treated arrests that are not
+transported.  These issues do not invalidate the arithmetic that was run, but
+they prevent the reported totals from having the incident-level, net-effect
+interpretation claimed in several passages.
+
+\section*{Major technical findings}
+
+\subsection*{1. Definite reporting error: the current-deployment result is gross, not net}
+
+\paragraph{Location.}
+``Current-deployment attribution scenario,'' the displayed $L_{988}$ and
+$L_{\mathrm{OHCA}}$ equations; ``Results that may be quoted,'' which calls the result
+``$53$ net statistical lives''; and
+\texttt{pec\_evidence\_simulation.py}.
+
+\paragraph{Problem.}
+The executable current result is
+\[
+L_A=L_{988}+L_{L\text{-only}}+L_{A\text{-only}}+L_{\mathrm{joint}},
+\]
+and every term is nonnegative by construction.  There is no current-deployment
+counterpart to the adverse rates used in the mature model for mistranslation,
+misrouting, stale information, distraction, false escalation, or added delay.
+Consequently, the simulated $53.4$-life median is a gross positive attribution
+scenario, not a net difference between beneficial and adverse mortality
+effects.
+
+\paragraph{Why it matters.}
+``Net'' implies that harms have been subtracted.  The label makes the current
+result look directly comparable with the mature net result even though the two
+models use different benefit/harm accounting.  The all-positive construction
+also explains the mechanical probability of benefit more directly than the
+present discussion acknowledges.
+
+\paragraph{Suggested fix.}
+Either add explicit current-deployment adverse pathways and report
+benefit-minus-harm, or replace ``net statistical lives'' and similar language
+with ``gross attributed beneficial lives'' throughout the abstract, results,
+quotable text, tables, and conclusion.  If harms cannot be parameterized,
+include a separate current adverse-rate sensitivity rather than silently
+calling the positive-only result net.
+
+\subsection*{2. Definite uncertainty omission: the load-bearing 988 association is fixed}
+
+\paragraph{Location.}
+The displayed $L_{988}=(4{,}372/2.5)gc$ equation, the ``Current-scenario
+inputs'' table, the current-attribution interval, and the input field
+\texttt{annual\_988\_external\_association} with value $1748.8$.
+
+\paragraph{Problem.}
+The cited \texttt{patel2026} study reports $4{,}372$ fewer suicides than
+projected with a $95\%$ confidence interval of $3{,}395$--$5{,}349$ over the
+2.5-year post-launch period.  The model annualizes only the point estimate and
+treats it as fixed.  The sampled causal fraction $c$ addresses attribution and
+possible noncausality; it is not a substitute for uncertainty in the estimated
+external association.  Likewise, the PEC share $g$ describes a separate
+allocation assumption.
+
+\paragraph{Why it matters.}
+The 988 component supplies about $38.5$ of the $55.4$ mean current-attribution
+lives, so omitting its estimation uncertainty makes the reported
+``parameter/scenario interval'' incomplete.  Readers cannot tell that the
+interval is conditional on the external association being exactly $1{,}748.8$
+per year.
+
+\paragraph{Suggested fix.}
+Draw the external association from the study's reported uncertainty or,
+preferably, from its model/bootstrap output, and keep that draw distinct from
+$g$ and $c$.  If this cannot be done, relabel the interval as conditional on
+the fixed $4{,}372/2.5$ association and state the omitted source-estimate
+uncertainty beside the headline result.
+
+\subsection*{3. Definite unresolved overlap: the mature total is not based on unique incidents}
+
+\paragraph{Location.}
+``Mature full-implementation model,'' the $A_j$, $\lambda_j^{+}$, and
+$\lambda_j^{-}$ equations, the ``Complete mature mortality priors'' table,
+and the annual-count equations.
+
+\paragraph{Problem.}
+The code correctly partitions the five acute-EMS rows, but the total still adds
+the 988, 211, 911 diversion/capacity, acute-EMS, and contacts/passive pathways
+without a cross-pathway allocation.  These populations are not disjoint.  For
+example, the $240$ million 911-call denominator contains the treated-and-
+transported 911 EMS responses used by the acute partition, and passive
+detection may lead to 911, 988, 211, or EMS activity that is counted again
+downstream.
+
+The unit of analysis also changes across rows: 988 contacts, 211 requests,
+911 calls, EMS responses, OHCA cases, and U.S. residents are all multiplied by
+quantities described as absolute risk changes ``per affected incident.''
+Contacts and calls may repeat within one incident or for one person.  No
+deduplication or contact-to-unique-incident conversion is specified.
+
+\paragraph{Why it matters.}
+Within-pathway benefit/harm/none outcomes can be mutually exclusive while the
+same underlying death transition is still credited in more than one pathway.
+The direction of the resulting bias is likely upward, but its magnitude cannot
+be recovered from the published model.  The predictive count distribution
+also treats heterogeneous administrative records as exchangeable incident
+trials.
+
+\paragraph{Suggested fix.}
+Define one incident-flow or state-transition model that allocates a unique
+event first to 988, 211, 911-only, acute EMS, passive-discovery, or explicit
+joint categories, then applies one mortality transition.  At minimum, provide
+repeat-contact factors and cross-pathway overlap distributions, and report a
+sensitivity that attenuates all potentially duplicated pathways together.
+Change ``per incident'' to the actual unit wherever a contact-level or
+call-level effect is intended.
+
+\subsection*{4. Definite population mismatch: EMS-treated OHCA is placed inside a transported-response partition}
+
+\paragraph{Location.}
+The national anchors; the displayed definition of $r^*_{\mathrm{CA}}$; the
+``Current-scenario inputs'' table, where $N_{\mathrm{OHCA}}$ is called a
+``transported national anchor''; and the acute annual-count multinomial.
+
+\paragraph{Problem.}
+$N_{\mathrm{OHCA}}$ is defined from EMS-treated nontraumatic arrests and the
+CARES resuscitation-attempt population, which includes arrests pronounced in
+the field.  The shared acute denominator $I_A$, by contrast, is explicitly the
+number of treated-\emph{and-transported} 911 EMS responses.  Thus
+\[
+r^*_{\mathrm{CA}}=(N_{\mathrm{OHCA}}/I_A)r_{\mathrm{CA}}
+\]
+does not convert a subset of $I_A$ into a categorical share; it embeds a count
+from a different population in the transported-response multinomial.
+
+This is also required notation/terminology drift: the symbol is first
+described as an EMS-treated OHCA count but is later labeled ``transported.''
+
+\paragraph{Why it matters.}
+The expected OHCA arithmetic happens to reduce to
+$N_{\mathrm{OHCA}}r_{\mathrm{CA}}u_{\mathrm{CA}}$, but the finite-population
+interpretation and the claimed common acute incident partition are false for
+nontransported arrests.  The resulting negative covariance with transported
+acute categories is therefore imposed between populations that are not
+actually mutually exclusive parts of one denominator.
+
+\paragraph{Suggested fix.}
+Use a common EMS-assessed/treated denominator for all categories, with
+transport status modeled explicitly, or place OHCA in a separate stratum and
+specify its overlap with transported acute pathways.  Remove ``transported''
+from the $N_{\mathrm{OHCA}}$ descriptor unless the source count is replaced by
+a transported-only estimate.
+
+\subsection*{5. The printed probability model is incomplete without the code}
+
+\paragraph{Location.}
+``Current-scenario inputs,'' ``Mature full-implementation model,'' and the
+displayed affected-count and acute-partition equations.
+
+\paragraph{Problem.}
+Three implementation choices that materially define the distributions are
+absent or ambiguous in the manuscript:
+\begin{enumerate}
+\item ``beta-PERT with shape 8'' is not defined.  The code uses
+\[
+\alpha=1+8\frac{m-a}{b-a},\qquad
+\beta=1+8\frac{b-m}{b-a},\qquad
+X=a+(b-a)\operatorname{Beta}(\alpha,\beta),
+\]
+but other PERT conventions use different meanings for the shape parameter.
+\item The current inputs are sampled independently.  In the mature model,
+pathway-specific relevance, success, and ARR draws are independent except for
+the five shared multipliers.  Those independence assumptions are not stated.
+\item The first mature-model equation defines $A_j=I_jr_ju_j$ for every pathway, while
+the implemented acute expectation is $A_j=I_A\tilde q_ju_j$.  The latter is
+shown indirectly but never replaces the original definition.
+\end{enumerate}
+
+\paragraph{Why it matters.}
+The current and mature interval widths depend on the distribution
+parameterization and dependence structure.  A reader following only the
+printed equations cannot reconstruct the simulation or know which reported
+``parameter'' dependencies are assumed absent.
+
+\paragraph{Suggested fix.}
+Print the PERT parameterization, state the complete independence/dependence
+structure, and define affected opportunities piecewise:
+\[
+A_j=
+\begin{cases}
+I_A\tilde q_ju_j,&j\in\mathcal A,\\
+I_jr_ju_j,&j\notin\mathcal A.
+\end{cases}
+\]
+Add sensitivity analyses for plausible correlation among pathway relevance,
+implementation success, and effect size, especially where difficult cases may
+simultaneously have higher relevance and lower success.
+
+\subsection*{6. Likely evidence-conversion issue and descriptor drift in the time slopes}
+
+\paragraph{Location.}
+The derivation of $\beta_{\mathrm{CPR}}$, the displayed distribution for
+$\beta_{D\to S}$, and the ``Current-scenario inputs'' table.
+
+\paragraph{Problem.}
+The prose correctly calls the CPR slope an ``approximate planning transport''
+from adjusted delay-category odds ratios and a marginal same-cohort baseline.
+The table later calls it an ``exact conversion from U.S. adjusted odds
+ratios.''  That is a conflicting descriptor for the same symbol: the logarithm
+calculation is exact only after imposing unreported category-time contrasts
+and a constant per-minute slope that the study did not fit.
+
+The access slope has a related problem.  The cited adult response-time studies
+use heterogeneous populations, endpoints, time categories, and effect
+measures, including relative-risk-type statements.  The manuscript does not
+show how they produce a constant
+$\operatorname{PERT}(0,0.060,0.120)$ \emph{log-odds} coefficient per minute.
+
+\paragraph{Why it matters.}
+These slopes feed implementation-facing logistic formulas, so confusing an
+odds ratio, risk ratio, categorical comparison, and constant time slope changes
+the implied absolute risk gain.  The access-only component is also the largest
+OHCA contribution in the current scenario.
+
+\paragraph{Suggested fix.}
+Replace ``exact conversion'' with ``author-specified constant-slope
+approximation informed by adjusted category associations.''  For
+$\beta_{D\to S}$, give the source estimate, endpoint, effect measure, baseline
+risk, mathematical conversion, and uncertainty mapping for each bound.  If a
+defensible conversion is unavailable, label the full triplet an
+author-specified log-odds sensitivity rather than a calibrated registry range.
+
+\subsection*{7. Definite archive defect: the promised reproducibility release is incomplete}
+
+\paragraph{Location.}
+``Reproducibility'' and \texttt{source-materials/README.md}.
+
+\paragraph{Problem.}
+The manuscript says that
+\texttt{reproducibility-manifest.sha256} records hashes of the papers, scripts,
+inputs, and outputs, but that file is absent.  The three simulation scripts do
+exist locally and reproduce the mortality outputs.  However, the current
+\texttt{.gitignore} begins with a wildcard that ignores Python files,
+\texttt{scripts/}, and CSV outputs, and those files are not in the Git index.
+Thus the active workspace can run the model, but the versioned archive does not
+contain the executable package claimed in the paper.
+
+\paragraph{Why it matters.}
+The results cannot be independently reproduced from the tracked release, and
+the missing manifest makes it impossible to verify that a recipient has the
+exact scripts used for the published JSON.  This directly contradicts the
+archive-completeness claim.
+
+\paragraph{Suggested fix.}
+Revise \texttt{.gitignore}, add the simulation scripts, bundled proofing script,
+and required CSV outputs to the release, generate the SHA-256 manifest only
+after all revisions, and document a verification command.  Add a clean-clone
+test that compiles the paper, reruns both mortality scripts, compares the JSON,
+and verifies the manifest.
+
+\section*{Meaningful editorial and notation findings}
+
+\subsection*{Symbols in the joint OHCA equation are used before definition}
+
+\paragraph{Location.}
+The joint $L_{\mathrm{OHCA}}$ equation and the preceding definition of $a_L$,
+$a_A$, and $a_J$.
+
+\paragraph{Problem and significance.}
+$\pi_L$, $u_L$, $\pi_A$, $u_A$, and $t_L$ first appear in the equation block;
+their verbal definitions are deferred to the ``Current-scenario inputs'' table.  The
+equation is central to the overlap correction, so the delayed definitions make
+it difficult to distinguish prevalence, success, and recovered time.
+
+\paragraph{Suggested fix.}
+Define each symbol in the prose immediately before the equations, including
+its conditioning population and units.  In particular, state that $\pi_L$ is
+transported from general medical 911 calls to OHCA and that $t_L$ is recovered
+time to layperson CPR initiation.
+
+\subsection*{The count symbol conflicts with receiver compatibility}
+
+\paragraph{Location.}
+The shared-multiplier equation uses $C$ for receiver compatibility, while the
+annual-count equations use $C_j$ and $C_0$ for acute category counts.
+
+\paragraph{Problem and significance.}
+The quantities have different units and roles but appear in adjacent
+implementation equations.  This is avoidable notation overload.
+
+\paragraph{Suggested fix.}
+Rename the receiver multiplier $R_{\mathrm{comp}}$ or rename category counts
+$M_j$ and $M_0$.
+
+\section*{Proofing sweep}
+
+The bundled \texttt{scripts/proofing\_scan.py} was run on the compiled
+manuscript.  Its two semicolon-capitalization hits are false positives caused
+by the acronym ``PEC'' in the landscape input table.  It found no verified
+duplicated punctuation, malformed repeated-preposition frames, product-name
+capitalization errors, or inverse-tangent quotient branch ambiguity.  No inverse
+trigonometric expression occurs in the manuscript.
+
+The following high-confidence corrections remain:
+\begin{itemize}
+\item \textbf{The ``Mature modal-input calculations'' table:} the exact modal adverse total is
+$106.03371206$, which rounds to $106.0$, not $106.1$.  The current row is also
+arithmetically inconsistent because $2{,}763.2-106.1\neq2{,}657.2$.  Replace
+$106.1$ with $106.0$.
+\item \textbf{The ``Current-scenario inputs'' table:} replace ``exact conversion from
+U.S. adjusted odds ratios'' with wording consistent with the manuscript's own
+approximation caveat.
+\end{itemize}
+
+\section*{Checks completed without an additional concrete error}
+
+The logistic exponents have consistent units because every time slope is per
+minute and is multiplied by minutes.  The signs in the time-recovery equations
+are internally consistent: recovered time raises modeled survival odds.  The
+language/access overlap construction keeps $a_J\leq\min(a_L,a_A)$ and avoids
+adding two separate updates for joint cases.  The mature acute annual-count
+code now uses a sequential-binomial construction equivalent to the printed
+multinomial partition, followed by mutually exclusive benefit/harm/none
+counts.  Apart from the $106.1$ table entry, the checked modal totals,
+quantiles, threshold probabilities, and sensitivity summaries agree with the
+archived executable outputs.
+
+\section*{External-verification status}
+
+Targeted checks support the manuscript's quoted $4{,}372$ 988 association, the
+Nguyen adjusted odds ratios of $0.91$ and $0.73$, the video-dispatch trial's
+reported 30-day mortality risk difference, the $0.4$-minute escort-associated
+vertical-response difference, and the CARES national count and survival
+summary.  These checks do not turn any external association into a PEC effect.
+
+The following remain items for external or new empirical verification and
+must retain planning-assumption labels:
+\begin{itemize}
+\item the cross-endpoint factor $\kappa_A$ and the conversion of
+scene-to-patient time into mortality;
+\item PEC-specific reach, activation, receiver use, overlap, beneficial ARR,
+and adverse ARR for every pathway;
+\item unique-incident and repeat-contact factors connecting 988 contacts, 211
+requests, 911 calls, EMS responses, and passive detection;
+\item national OHCA-specific language and material-access prevalence; and
+\item the provenance of the unavailable original PEC binary source documents.
+\end{itemize}
+
+\section*{Highest-priority fixes}
+
+\begin{enumerate}
+\item Make the current scenario genuinely net or relabel it as a gross
+positive attribution, and propagate the uncertainty in the external 988
+association.
+\item Rebuild the mature total around unique incidents or an explicit
+cross-pathway state-transition model; do not rely only on the five-row acute
+partition.
+\item Separate EMS-treated OHCA from the transported-response denominator or
+adopt a genuinely common acute population.
+\item Complete the printed probability model with the PERT formula,
+piecewise affected-count equation, and dependence assumptions; document or
+relabel the time-slope conversions.
+\item Repair the tracked reproducibility package and manifest, then regenerate
+the affected tables and correct the remaining numerical and bibliographic
+defects.
+\end{enumerate}
+
+After these changes, the manuscript's strong identification caveats would be
+matched more closely by its estimands, incident accounting, uncertainty model,
+and executable archive.  Until then, the numerical outputs are reproducible as
+the stated scripts run, but the current result should be interpreted as a
+gross positive scenario and the mature total as an additive planning model
+with unresolved cross-pathway overlap.
+
+\end{document}

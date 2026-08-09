@@ -1,0 +1,44 @@
+name: Validate repository
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended latexmk
+
+      - name: Run structure and manifest validation
+        run: python scripts/validate_repository.py
+
+      - name: Run deployment schema tests
+        run: |
+          python scripts/validate_deployment_export.py --schema-only
+          python scripts/test_deployment_validator.py
+
+      - name: Clean rerun and byte-for-byte comparison
+        run: python scripts/validate_repository.py --rerun

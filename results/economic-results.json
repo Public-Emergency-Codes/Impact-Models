@@ -1,0 +1,4228 @@
+{
+  "metadata": {
+    "release_tag": "pec-prospective-2026-08-09-r9",
+    "base_seed": 20260808,
+    "near_term_economic_seed": 20260909,
+    "mature_economic_seed": 20261010,
+    "draws_per_scenario": 60000,
+    "dollar_year": 2026,
+    "model_definition": "This is a prospective probabilistic model of potential outcomes conditional on future Public Emergency Codes deployment. PEC has not generated deployment outcome data from which a PEC-specific causal effect can be estimated. The model does not estimate the probability that deployment itself will occur.",
+    "primary_accounting": "QALYs are reported unmonetized and excluded from the primary monetary total; mortality production is excluded; VSL is a separate societal mortality-risk valuation.",
+    "direct_process_benchmark_rule": "Mortality, monetized QALYs, productivity, and property are zero. Positive direct-resource changes are multiplied by pathway evidence weights; adverse direct-resource changes are retained fully. This is a restricted scenario, not a demonstrated mathematical floor.",
+    "public_fiscal_label": "potential variable public expenditure avoided before realization; realization percentages apply only to positive avoided expenditure, while modeled added public costs remain fully counted",
+    "public_capacity_partition": "Each primitive public resource element is assigned once: expenditure contains only potentially expenditure-changing units, capacity contains only residual operational value excluded from expenditure, and gross public resource equals expenditure plus residual capacity. Runtime assertions enforce the reconciliation identity.",
+    "receiver_cost_rule": "G_jp is the gross paired delta before receiving-system cost, R_jp is the separately drawn receiving-system offset, D_jp=G_jp-R_jp is the net paired delta, and B_jp=A_j D_jp is aggregated once.",
+    "deployment_cost_status": "Illustrative pre-procurement cost envelope split into fixed predeployment capital, rollout capital, fixed recurring, and adoption-dependent recurring components; break-even thresholds remain primary because no procurement study exists.",
+    "feature_allocation": "Linear Shapley reporting allocation under the prespecified additive pathway feature game; not a causal effect.",
+    "adoption_model": "Stochastic logistic rollout fraction relative to the mature scenario, with uncertain slope, midpoint, and attainable asymptote.",
+    "sensitivity": "Local correlation diagnostics, Morris elementary-effects screening of a documented median-input emulator, and low/medium/high Gaussian plus Student-t copula dependence sensitivities within the mortality/implementation and economic-driver blocks.",
+    "copula_algorithm": "Economic-driver marginals use a separate equicorrelated Gaussian or Student-t(df=4) block with Z_j=sqrt(rho)Z_0+sqrt(1-rho)epsilon_j; uniforms are obtained from the matching CDF. Mortality arrays are imported from a separately generated mortality block, so no unestimated cross-block copula is imposed beyond the shared affected-episode and mortality arrays.",
+    "distribution_form_robustness": "Endpoint-based beta-PERT, triangular, uniform/bounded, and bounded logit-normal or normal marginals are rerun, followed by approximately PERT-moment-matched versions of the three alternatives.",
+    "near_term_scaling": "Near-term pathway deployment scales are separate from restricted-scenario weights; the two concepts are never represented by one variable.",
+    "near_term_pathway_scale": {
+      "988/crisis connection": 1.0,
+      "211 social/health referral": 0.35,
+      "911 diversion/capacity": 0.35,
+      "earlier correct 911 access": 0.25,
+      "cardiac-arrest rapid assistance": 0.25,
+      "silent/language access": 1.0,
+      "location/responder access": 1.0,
+      "medical data/photo/video": 0.25,
+      "contacts/passive monitoring": 0.1,
+      "U.S. traveler abroad": 0.15
+    },
+    "pathway_evidence_weights": {
+      "988/crisis connection": 1.0,
+      "211 social/health referral": 0.6,
+      "911 diversion/capacity": 0.7,
+      "earlier correct 911 access": 0.15,
+      "cardiac-arrest rapid assistance": 1.0,
+      "silent/language access": 1.0,
+      "location/responder access": 1.0,
+      "medical data/photo/video": 0.6,
+      "contacts/passive monitoring": 0.25,
+      "U.S. traveler abroad": 0.2
+    },
+    "receiver_resource_cost_inputs_per_affected_episode": {
+      "988/crisis connection": {
+        "public_fiscal": [
+          25.0,
+          90.0,
+          260.0
+        ],
+        "capacity": [
+          5.0,
+          20.0,
+          80.0
+        ],
+        "private_household": [
+          5.0,
+          20.0,
+          100.0
+        ],
+        "other_direct_resource": [
+          5.0,
+          25.0,
+          120.0
+        ]
+      },
+      "211 social/health referral": {
+        "public_fiscal": [
+          5.0,
+          35.0,
+          140.0
+        ],
+        "capacity": [
+          2.0,
+          10.0,
+          40.0
+        ],
+        "private_household": [
+          0.0,
+          10.0,
+          60.0
+        ],
+        "other_direct_resource": [
+          2.0,
+          10.0,
+          50.0
+        ]
+      },
+      "911 diversion/capacity": {
+        "public_fiscal": [
+          0.1,
+          0.6,
+          2.5
+        ],
+        "capacity": [
+          0.1,
+          0.5,
+          2.0
+        ],
+        "private_household": [
+          0.0,
+          0.1,
+          0.5
+        ],
+        "other_direct_resource": [
+          0.0,
+          0.1,
+          0.5
+        ]
+      },
+      "earlier correct 911 access": {
+        "public_fiscal": [
+          0.0,
+          8.0,
+          35.0
+        ],
+        "capacity": [
+          0.0,
+          3.0,
+          15.0
+        ],
+        "private_household": [
+          0.0,
+          5.0,
+          30.0
+        ],
+        "other_direct_resource": [
+          0.0,
+          2.0,
+          15.0
+        ]
+      },
+      "cardiac-arrest rapid assistance": {
+        "public_fiscal": [
+          0.0,
+          15.0,
+          80.0
+        ],
+        "capacity": [
+          0.0,
+          5.0,
+          25.0
+        ],
+        "private_household": [
+          0.0,
+          15.0,
+          100.0
+        ],
+        "other_direct_resource": [
+          0.0,
+          5.0,
+          40.0
+        ]
+      },
+      "silent/language access": {
+        "public_fiscal": [
+          1.0,
+          8.0,
+          35.0
+        ],
+        "capacity": [
+          1.0,
+          4.0,
+          15.0
+        ],
+        "private_household": [
+          0.0,
+          4.0,
+          20.0
+        ],
+        "other_direct_resource": [
+          0.0,
+          2.0,
+          12.0
+        ]
+      },
+      "location/responder access": {
+        "public_fiscal": [
+          0.0,
+          5.0,
+          25.0
+        ],
+        "capacity": [
+          0.0,
+          3.0,
+          15.0
+        ],
+        "private_household": [
+          0.0,
+          3.0,
+          20.0
+        ],
+        "other_direct_resource": [
+          0.0,
+          2.0,
+          12.0
+        ]
+      },
+      "medical data/photo/video": {
+        "public_fiscal": [
+          2.0,
+          18.0,
+          80.0
+        ],
+        "capacity": [
+          1.0,
+          6.0,
+          30.0
+        ],
+        "private_household": [
+          1.0,
+          10.0,
+          60.0
+        ],
+        "other_direct_resource": [
+          1.0,
+          6.0,
+          30.0
+        ]
+      },
+      "contacts/passive monitoring": {
+        "public_fiscal": [
+          50.0,
+          300.0,
+          1500.0
+        ],
+        "capacity": [
+          10.0,
+          50.0,
+          250.0
+        ],
+        "private_household": [
+          10.0,
+          100.0,
+          800.0
+        ],
+        "other_direct_resource": [
+          10.0,
+          50.0,
+          300.0
+        ]
+      },
+      "U.S. traveler abroad": {
+        "public_fiscal": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "private_household": [
+          0.0,
+          50.0,
+          500.0
+        ],
+        "other_direct_resource": [
+          0.0,
+          20.0,
+          200.0
+        ]
+      }
+    },
+    "traveler_abroad_mortality_module": {
+      "exposure_departures_low_mode_high": [
+        98500000.0,
+        105000000.0,
+        115000000.0
+      ],
+      "destination_groups": [
+        {
+          "name": "Mexico",
+          "trip_share": 0.32,
+          "unfamiliar_or_wrong_number_probability": [
+            0.08,
+            0.15,
+            0.3
+          ],
+          "relative_economic_consequence": [
+            0.7,
+            0.9,
+            1.2
+          ]
+        },
+        {
+          "name": "Canada",
+          "trip_share": 0.17,
+          "unfamiliar_or_wrong_number_probability": [
+            0.0,
+            0.02,
+            0.08
+          ],
+          "relative_economic_consequence": [
+            0.6,
+            0.75,
+            1.0
+          ]
+        },
+        {
+          "name": "Europe",
+          "trip_share": 0.2,
+          "unfamiliar_or_wrong_number_probability": [
+            0.12,
+            0.25,
+            0.45
+          ],
+          "relative_economic_consequence": [
+            0.8,
+            1.0,
+            1.3
+          ]
+        },
+        {
+          "name": "Caribbean/Latin America",
+          "trip_share": 0.13,
+          "unfamiliar_or_wrong_number_probability": [
+            0.18,
+            0.35,
+            0.6
+          ],
+          "relative_economic_consequence": [
+            0.85,
+            1.1,
+            1.5
+          ]
+        },
+        {
+          "name": "Asia",
+          "trip_share": 0.1,
+          "unfamiliar_or_wrong_number_probability": [
+            0.2,
+            0.4,
+            0.65
+          ],
+          "relative_economic_consequence": [
+            0.9,
+            1.2,
+            1.65
+          ]
+        },
+        {
+          "name": "Other",
+          "trip_share": 0.08,
+          "unfamiliar_or_wrong_number_probability": [
+            0.22,
+            0.45,
+            0.72
+          ],
+          "relative_economic_consequence": [
+            1.0,
+            1.3,
+            1.8
+          ]
+        }
+      ],
+      "base_relevance_low_mode_high": [
+        0.001,
+        0.003,
+        0.006
+      ],
+      "successful_use_low_mode_high": [
+        0.2,
+        0.45,
+        0.7
+      ],
+      "unique_episode_factor_low_mode_high": [
+        0.8,
+        0.95,
+        1.0
+      ],
+      "beneficial_activation_probability_low_mode_high": [
+        0.1,
+        0.3,
+        0.6
+      ],
+      "adverse_activation_probability_low_mode_high": [
+        0.05,
+        0.2,
+        0.45
+      ],
+      "beneficial_arr_low_mode_high": [
+        5e-05,
+        0.0002,
+        0.001
+      ],
+      "adverse_arr_low_mode_high": [
+        1e-05,
+        0.0001,
+        0.001
+      ],
+      "beneficial_effect_multiplier_low_mode_high": [
+        0.55,
+        1.0,
+        1.55
+      ],
+      "adverse_effect_multiplier_low_mode_high": [
+        0.55,
+        1.0,
+        1.55
+      ],
+      "implementation_driver_weights": {
+        "adoption": 0.3,
+        "traveler_reach": 0.45,
+        "global_numbers": 0.25
+      },
+      "equation": "U=sum_r w_r u_r; A=min(I*d*r*U*s*M,I); Z_plus~Bernoulli(p_plus), Z_minus~Bernoulli(p_minus); L=A*(Z_plus*H_plus*Delta_plus-Z_minus*H_minus*Delta_minus). Regional consequence Q=(sum_r w_r u_r q_r)/max(U,1e-9) scales economic deltas and receiving costs only.",
+      "near_term_treatment": "traveler mortality set to zero"
+    },
+    "deployment_cost_inputs": {
+      "one_time_capital_and_integration": [
+        1000000000.0,
+        4000000000.0,
+        12000000000.0
+      ],
+      "annual_operations_training_security": [
+        300000000.0,
+        1000000000.0,
+        3000000000.0
+      ],
+      "annual_replacement_and_upgrade": [
+        50000000.0,
+        300000000.0,
+        900000000.0
+      ],
+      "public_financing_share": [
+        0.35,
+        0.65,
+        0.9
+      ],
+      "fixed_predeployment_capital_share": [
+        0.25,
+        0.4,
+        0.6
+      ],
+      "fixed_recurring_operations_share": [
+        0.2,
+        0.35,
+        0.55
+      ],
+      "fixed_recurring_replacement_share": [
+        0.2,
+        0.5,
+        0.8
+      ],
+      "near_term_deployment_maturity": [
+        0.15,
+        0.3,
+        0.5
+      ]
+    },
+    "deployment_cost_scope_without_line_item_allocation": [
+      "consumer-platform and operating-system integration",
+      "PSAP software, hardware, interfaces, and testing",
+      "cloud, network, storage, observability, and continuity",
+      "implementation staffing, training, and change management",
+      "cybersecurity, privacy, identity, and incident response",
+      "legal, accessibility, compliance, insurance, and liability",
+      "help desk, maintenance, vendor support, and quality assurance",
+      "public education, localization, translation, and outreach",
+      "replacement, upgrades, interoperability certification, and recertification"
+    ],
+    "adoption_parameter_inputs": {
+      "asymptote": [
+        0.55,
+        0.82,
+        0.97
+      ],
+      "midpoint_year": [
+        3.5,
+        5.5,
+        8.0
+      ],
+      "slope": [
+        0.45,
+        0.8,
+        1.25
+      ]
+    },
+    "call_mix": {
+      "duplicate_or_status": 0.45,
+      "non_emergency_or_wrong_service": 0.25,
+      "transfer_or_redirection": 0.2,
+      "callback_or_abandonment_related": 0.1
+    },
+    "property_mix": {
+      "residential_structure_and_contents": 0.6,
+      "commercial_structure_and_contents": 0.2,
+      "vehicle_and_infrastructure": 0.1,
+      "business_interruption": 0.1
+    }
+  },
+  "near_term": {
+    "scenario": "near_term",
+    "summaries": {
+      "potential_variable_public_expenditure_avoided": {
+        "mean": 107483398.6266385,
+        "p2.5": 24179041.622784276,
+        "p5": 34773968.660970114,
+        "p25": 71036681.74319305,
+        "median": 101547616.8765767,
+        "p75": 137874854.59720224,
+        "p95": 200413872.64110476,
+        "p97.5": 223283624.89571565,
+        "probability_positive": 0.9966333333333334,
+        "probability_zero": 0.0
+      },
+      "capacity": {
+        "mean": 29543025.37012902,
+        "p2.5": 10868293.805040304,
+        "p5": 13227954.254259074,
+        "p25": 21346118.06866056,
+        "median": 28095056.92399397,
+        "p75": 36162423.55342074,
+        "p95": 50796466.495913096,
+        "p97.5": 56716401.29529719,
+        "probability_positive": 0.9996,
+        "probability_zero": 0.0
+      },
+      "private_household": {
+        "mean": 114983467.97224456,
+        "p2.5": 46361170.43704685,
+        "p5": 54366090.182321124,
+        "p25": 84125326.58094491,
+        "median": 109611605.44740954,
+        "p75": 139977130.0883137,
+        "p95": 193587668.77188,
+        "p97.5": 214052589.51467797,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "other_direct_resource": {
+        "mean": 17737611.96636717,
+        "p2.5": -2599131.1632758495,
+        "p5": 726295.5118528958,
+        "p25": 10142488.65237473,
+        "median": 16914605.772117954,
+        "p75": 24559932.00276023,
+        "p95": 37504033.3011115,
+        "p97.5": 42524602.79332441,
+        "probability_positive": 0.9567333333333333,
+        "probability_zero": 0.0
+      },
+      "productivity": {
+        "mean": 292339496.06124884,
+        "p2.5": 127417774.35464382,
+        "p5": 145551481.0391602,
+        "p25": 213006830.06929165,
+        "median": 275802322.36345375,
+        "p75": 353081234.3082737,
+        "p95": 495797872.4474563,
+        "p97.5": 550702955.6414356,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "property": {
+        "mean": 5148805.960813622,
+        "p2.5": 975749.1193898531,
+        "p5": 1255871.1240100898,
+        "p25": 2629064.2436128478,
+        "median": 4260619.363247091,
+        "p75": 6676612.5772162555,
+        "p95": 12049587.68428182,
+        "p97.5": 14460315.710526075,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "direct_resource": {
+        "mean": 269747503.93537927,
+        "p2.5": 135782616.7913743,
+        "p5": 152013142.37505355,
+        "p25": 210700568.83198756,
+        "median": 260552910.89749968,
+        "p75": 318240804.77306706,
+        "p95": 420079396.64717275,
+        "p97.5": 458670075.519981,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "direct_process_conservative_benchmark": {
+        "mean": 193962749.02577442,
+        "p2.5": 85128569.85593662,
+        "p5": 98000471.82004331,
+        "p25": 144248506.43209237,
+        "median": 184861154.28972793,
+        "p75": 232974967.39144406,
+        "p95": 322463631.89564836,
+        "p97.5": 355894851.9143566,
+        "probability_positive": 0.9999833333333333,
+        "probability_zero": 0.0
+      },
+      "qaly_unmonetized": {
+        "mean": 784.5806718633912,
+        "p2.5": 310.8472911113935,
+        "p5": 357.92542562085595,
+        "p25": 550.953159636,
+        "median": 732.6022477769536,
+        "p75": 959.925202086994,
+        "p95": 1391.4336986506744,
+        "p97.5": 1557.5609162716135,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "qaly_valuation_sensitivity": {
+        "mean": 569937039.8975636,
+        "p2.5": 209217972.73214555,
+        "p5": 243401408.13547197,
+        "p25": 385515584.2843498,
+        "median": 525694086.53075945,
+        "p75": 703279363.9325895,
+        "p95": 1050653433.0620188,
+        "p97.5": 1189422159.258172,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "call_taker_hours": {
+        "mean": 172263.63061903344,
+        "p2.5": 68709.40149670783,
+        "p5": 79027.68089905861,
+        "p25": 120073.68405756343,
+        "median": 160650.06421568926,
+        "p75": 211731.1498966291,
+        "p95": 305674.1381076295,
+        "p97.5": 340988.6405526874,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "workdays_preserved": {
+        "mean": 790854.4435957797,
+        "p2.5": 369365.93061450194,
+        "p5": 416086.1787208116,
+        "p25": 592223.53342157,
+        "median": 752074.365482299,
+        "p75": 946857.3925318654,
+        "p95": 1299018.269135384,
+        "p97.5": 1432966.8818228333,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "lives": {
+        "mean": 8.879968791637049,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 2.6775947329967966,
+        "p95": 50.72486148033413,
+        "p97.5": 61.08655900042414,
+        "probability_positive": 0.4653833333333333,
+        "probability_zero": 0.5346166666666666
+      },
+      "domestic_lives": {
+        "mean": 8.879968791637049,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 2.6775947329967966,
+        "p95": 50.72486148033413,
+        "p97.5": 61.08655900042414,
+        "probability_positive": 0.4653833333333333,
+        "probability_zero": 0.5346166666666666
+      },
+      "traveler_lives": {
+        "mean": 0.0,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "p97.5": 0.0,
+        "probability_positive": 0.0,
+        "probability_zero": 1.0
+      },
+      "tier_c_zero_lives": {
+        "mean": 8.879968791637049,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 2.6775947329967966,
+        "p95": 50.72486148033413,
+        "p97.5": 61.08655900042414,
+        "probability_positive": 0.4653833333333333,
+        "probability_zero": 0.5346166666666666
+      },
+      "adverse_only_lives": {
+        "mean": 0.0,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "p97.5": 0.0,
+        "probability_positive": 0.0,
+        "probability_zero": 1.0
+      },
+      "mortality_vsl": {
+        "mean": 125095812.1838597,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 38545555.927913204,
+        "p95": 715120856.8570849,
+        "p97.5": 878939787.3640227,
+        "probability_positive": 0.4653833333333333,
+        "probability_zero": 0.5346166666666666
+      },
+      "mortality_neutral_societal": {
+        "mean": 567235805.9574417,
+        "p2.5": 307279194.16152906,
+        "p5": 337658393.9275733,
+        "p25": 451459215.502782,
+        "median": 547469321.2966843,
+        "p75": 661566057.3237576,
+        "p95": 862899294.2418457,
+        "p97.5": 938542373.4067631,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_excluding_vsl": {
+        "mean": 567235805.9574417,
+        "p2.5": 307279194.16152906,
+        "p5": 337658393.9275733,
+        "p25": 451459215.502782,
+        "median": 547469321.2966843,
+        "p75": 661566057.3237576,
+        "p95": 862899294.2418457,
+        "p97.5": 938542373.4067631,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 692331618.1413013,
+        "p2.5": 324314078.32892,
+        "p5": 357854802.06573564,
+        "p25": 485995483.9577881,
+        "median": 611607436.1721783,
+        "p75": 810102670.1581726,
+        "p95": 1317086801.26194,
+        "p97.5": 1497107521.39041,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "tier_c_zero_societal_including_vsl": {
+        "mean": 692331618.1413013,
+        "p2.5": 324314078.32892,
+        "p5": 357854802.06573564,
+        "p25": 485995483.9577881,
+        "median": 611607436.1721783,
+        "p75": 810102670.1581726,
+        "p95": 1317086801.26194,
+        "p97.5": 1497107521.39041,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "adverse_only_societal_including_vsl": {
+        "mean": 567235805.9574417,
+        "p2.5": 307279194.16152906,
+        "p5": 337658393.9275733,
+        "p25": 451459215.502782,
+        "median": 547469321.2966843,
+        "p75": 661566057.3237576,
+        "p95": 862899294.2418457,
+        "p97.5": 938542373.4067631,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 1220209133.5865355,
+        "p2.5": 743633070.6174481,
+        "p5": 808144943.2048032,
+        "p25": 1025120959.5370885,
+        "median": 1201563485.866635,
+        "p75": 1395404637.6943076,
+        "p95": 1701482345.0151443,
+        "p97.5": 1801523282.9126346,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "full_annualized_cost_stress": {
+        "mean": 2109153827.5598638,
+        "p2.5": 1302956999.6618614,
+        "p5": 1408555819.2579024,
+        "p25": 1784539020.1171796,
+        "median": 2081096854.877564,
+        "p75": 2409394248.936771,
+        "p95": 2900040894.906357,
+        "p97.5": 3058113209.243707,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "deployment_cost_maturity": {
+        "mean": 0.3050672978973996,
+        "p2.5": 0.20853808521003067,
+        "p5": 0.2206129084429886,
+        "p25": 0.26667799585426993,
+        "median": 0.30352995938585275,
+        "p75": 0.3420436129438731,
+        "p95": 0.3935703604379994,
+        "p97.5": 0.4095028283034721,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "public_net_at_50_percent_realization": {
+        "mean": -734065045.5127859,
+        "p2.5": -1185878548.4008157,
+        "p5": -1104624351.4586406,
+        "p25": -861302042.8828311,
+        "median": -716310477.8759308,
+        "p75": -585575564.9028456,
+        "p95": -430863788.027773,
+        "p97.5": -387225752.0226417,
+        "probability_positive": 0.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -652973327.6290938,
+        "p2.5": -1299277061.983334,
+        "p5": -1191227448.3560302,
+        "p25": -859256753.5581888,
+        "median": -643545209.5969467,
+        "p75": -438491000.8138827,
+        "p95": -147055203.9243105,
+        "p97.5": -49654240.01821476,
+        "probability_positive": 0.016566666666666667,
+        "probability_zero": 0.0
+      },
+      "net_benefit_including_vsl": {
+        "mean": -527877515.445234,
+        "p2.5": -1255045396.3199425,
+        "p5": -1142888244.1039298,
+        "p25": -794560275.7678062,
+        "median": -556940498.3285556,
+        "p75": -297563798.1277826,
+        "p95": 202717114.77608058,
+        "p97.5": 394589081.68149465,
+        "probability_positive": 0.09733333333333333,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 0.4893381940775861,
+        "p2.5": 0.22542176027763627,
+        "p5": 0.25240818031283885,
+        "p25": 0.35821153218898627,
+        "median": 0.45679186603421174,
+        "p75": 0.5851624396903929,
+        "p95": 0.8371220348449103,
+        "p97.5": 0.9426921315078954,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_including_vsl": {
+        "mean": 0.5972928351007631,
+        "p2.5": 0.23865678928626557,
+        "p5": 0.26876678293526723,
+        "p25": 0.3912984542449446,
+        "median": 0.5194597142893613,
+        "p75": 0.7166878423623781,
+        "p95": 1.2020596701294448,
+        "p97.5": 1.399757611370755,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "ten_year_discounted_gross_excluding_vsl": {
+        "mean": 1378588424.392525,
+        "p2.5": 670249209.5669239,
+        "p5": 743923140.1654954,
+        "p25": 1045636755.753923,
+        "median": 1315946649.3013158,
+        "p75": 1639651725.9134314,
+        "p95": 2230634935.1580086,
+        "p97.5": 2461807973.9846454,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "ten_year_discounted_net_excluding_vsl": {
+        "mean": -8052421421.334277,
+        "p2.5": -12402683095.642736,
+        "p5": -11644694304.559893,
+        "p25": -9406748863.028013,
+        "median": -7923422572.06456,
+        "p75": -6577884340.107861,
+        "p95": -4872204958.033445,
+        "p97.5": -4365256429.045015,
+        "probability_positive": 0.0,
+        "probability_zero": 0.0
+      }
+    },
+    "distribution_form": "pert",
+    "dependence_rho": 0.5,
+    "copula_family": "gaussian",
+    "path_means": {
+      "988/crisis connection": {
+        "affected_unique_episodes": 349518.8390366712,
+        "potential_variable_public_expenditure_avoided": 36878126.3181156,
+        "capacity_value": 12641790.543908106,
+        "gross_public_resource_value": 49519916.86202371,
+        "private_household": 51847764.18938757,
+        "other_direct_resource": 3042015.758314837,
+        "productivity": 110281696.39357491,
+        "property": 0.0,
+        "qaly_unmonetized": 248.59788330724183,
+        "lives": 8.377773443647797,
+        "resource_total_excluding_vsl": 214691393.20330104,
+        "mortality_risk_value": 118021346.81604746,
+        "receiver_public_cost_per_changed_episode_mean": 100.72144882437729,
+        "receiver_capacity_cost_per_changed_episode_mean": 24.545382009988806,
+        "receiver_private_cost_per_changed_episode_mean": 26.49984421329486,
+        "receiver_other_direct_cost_per_changed_episode_mean": 32.52411628163252,
+        "receiver_total_direct_cost_per_changed_episode_mean": 184.29079132929348
+      },
+      "211 social/health referral": {
+        "affected_unique_episodes": 69021.48393202435,
+        "potential_variable_public_expenditure_avoided": 3305073.6244692407,
+        "capacity_value": 613914.9070860897,
+        "gross_public_resource_value": 3918988.5315553304,
+        "private_household": 7200559.757258364,
+        "other_direct_resource": 887849.7293182537,
+        "productivity": 17193135.977171764,
+        "property": 0.0,
+        "qaly_unmonetized": 27.66376190911125,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 29200533.995303713,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 42.60269881724671,
+        "receiver_capacity_cost_per_changed_episode_mean": 12.233264871260745,
+        "receiver_private_cost_per_changed_episode_mean": 14.03861816052315,
+        "receiver_other_direct_cost_per_changed_episode_mean": 13.171359082104054,
+        "receiver_total_direct_cost_per_changed_episode_mean": 82.04594093113465
+      },
+      "911 diversion/capacity": {
+        "affected_unique_episodes": 1494361.7263990059,
+        "potential_variable_public_expenditure_avoided": 513129.334410597,
+        "capacity_value": 7319278.344589573,
+        "gross_public_resource_value": 7832407.679000169,
+        "private_household": 75131.2790131607,
+        "other_direct_resource": 75464.84919315537,
+        "productivity": 939327.1238064592,
+        "property": 0.0,
+        "qaly_unmonetized": 0.0,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 8922330.931012945,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 0.7391993223829472,
+        "receiver_capacity_cost_per_changed_episode_mean": 0.6102694729815183,
+        "receiver_private_cost_per_changed_episode_mean": 0.13008220657293634,
+        "receiver_other_direct_cost_per_changed_episode_mean": 0.13020225071840827,
+        "receiver_total_direct_cost_per_changed_episode_mean": 1.60975325265581
+      },
+      "earlier correct 911 access": {
+        "affected_unique_episodes": 113889.77689984144,
+        "potential_variable_public_expenditure_avoided": 22696441.589637272,
+        "capacity_value": 4545498.590885265,
+        "gross_public_resource_value": 27241940.180522535,
+        "private_household": 19127666.411344793,
+        "other_direct_resource": 4618032.241567369,
+        "productivity": 83594256.49642214,
+        "property": 0.0,
+        "qaly_unmonetized": 225.839289461088,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 134581895.32985684,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 9.915547346535135,
+        "receiver_capacity_cost_per_changed_episode_mean": 3.891776163740796,
+        "receiver_private_cost_per_changed_episode_mean": 6.995133354323906,
+        "receiver_other_direct_cost_per_changed_episode_mean": 3.0843586782977694,
+        "receiver_total_direct_cost_per_changed_episode_mean": 23.886815542897608
+      },
+      "cardiac-arrest rapid assistance": {
+        "affected_unique_episodes": 9502.05977105573,
+        "potential_variable_public_expenditure_avoided": 24499643.82469581,
+        "capacity_value": 811855.3724342942,
+        "gross_public_resource_value": 25311499.197130103,
+        "private_household": 16527932.109733136,
+        "other_direct_resource": 5029167.273828599,
+        "productivity": 28338001.44124978,
+        "property": 0.0,
+        "qaly_unmonetized": 112.08479401819551,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 75206600.02194162,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 20.026527989410422,
+        "receiver_capacity_cost_per_changed_episode_mean": 6.518015837801707,
+        "receiver_private_cost_per_changed_episode_mean": 21.973604963375518,
+        "receiver_other_direct_cost_per_changed_episode_mean": 8.007579151909043,
+        "receiver_total_direct_cost_per_changed_episode_mean": 56.52572794249669
+      },
+      "silent/language access": {
+        "affected_unique_episodes": 728.3592693134068,
+        "potential_variable_public_expenditure_avoided": 27839.759884265575,
+        "capacity_value": 13300.232523711189,
+        "gross_public_resource_value": 41139.99240797676,
+        "private_household": 24803.449056599537,
+        "other_direct_resource": 6202.031451059025,
+        "productivity": 103523.63732707329,
+        "property": 0.0,
+        "qaly_unmonetized": 0.39051044278478036,
+        "lives": 0.5021953479892521,
+        "resource_total_excluding_vsl": 175669.11024270862,
+        "mortality_risk_value": 7074465.367812241,
+        "receiver_public_cost_per_changed_episode_mean": 10.02076397635758,
+        "receiver_capacity_cost_per_changed_episode_mean": 4.8066447573720055,
+        "receiver_private_cost_per_changed_episode_mean": 5.204410313333576,
+        "receiver_other_direct_cost_per_changed_episode_mean": 2.800267198018516,
+        "receiver_total_direct_cost_per_changed_episode_mean": 22.83208624508168
+      },
+      "location/responder access": {
+        "affected_unique_episodes": 9647.150900568167,
+        "potential_variable_public_expenditure_avoided": 922504.7331472309,
+        "capacity_value": 398275.48548196035,
+        "gross_public_resource_value": 1320780.2186291912,
+        "private_household": 775770.5301104151,
+        "other_direct_resource": 201497.71139658897,
+        "productivity": 2324362.598597473,
+        "property": 690028.8595505304,
+        "qaly_unmonetized": 10.458113518635244,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 5312439.9182842,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 6.480262376059455,
+        "receiver_capacity_cost_per_changed_episode_mean": 3.9175389575137816,
+        "receiver_private_cost_per_changed_episode_mean": 4.37844204257243,
+        "receiver_other_direct_cost_per_changed_episode_mean": 2.7934676413743444,
+        "receiver_total_direct_cost_per_changed_episode_mean": 17.569711017520014
+      },
+      "medical data/photo/video": {
+        "affected_unique_episodes": 116310.14335163671,
+        "potential_variable_public_expenditure_avoided": 11752675.642408138,
+        "capacity_value": 3182161.1520795086,
+        "gross_public_resource_value": 14934836.794487646,
+        "private_household": 9222001.17651827,
+        "other_direct_resource": 2014626.0086902126,
+        "productivity": 27801188.381453976,
+        "property": 1158934.8678705425,
+        "qaly_unmonetized": 102.65490457354338,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 55131587.22902065,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 22.628036669333824,
+        "receiver_capacity_cost_per_changed_episode_mean": 7.889357733604155,
+        "receiver_private_cost_per_changed_episode_mean": 14.120437715930715,
+        "receiver_other_direct_cost_per_changed_episode_mean": 7.917949819477348,
+        "receiver_total_direct_cost_per_changed_episode_mean": 52.555781938346044
+      },
+      "contacts/passive monitoring": {
+        "affected_unique_episodes": 6232.400652704837,
+        "potential_variable_public_expenditure_avoided": 6795332.529582029,
+        "capacity_value": 16950.741140517428,
+        "gross_public_resource_value": 6812283.270722548,
+        "private_household": 5176466.526828463,
+        "other_direct_resource": 1140525.7322865408,
+        "productivity": 14868839.083321054,
+        "property": 0.0,
+        "qaly_unmonetized": 44.185106042348266,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 27998114.613158606,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 394.84496551630843,
+        "receiver_capacity_cost_per_changed_episode_mean": 65.98562266951957,
+        "receiver_private_cost_per_changed_episode_mean": 160.85817341216864,
+        "receiver_other_direct_cost_per_changed_episode_mean": 70.98746144932291,
+        "receiver_total_direct_cost_per_changed_episode_mean": 692.6762230473196
+      },
+      "U.S. traveler abroad": {
+        "affected_unique_episodes": 4687.8594561836435,
+        "potential_variable_public_expenditure_avoided": 92631.27028831605,
+        "capacity_value": 0.0,
+        "gross_public_resource_value": 92631.27028831605,
+        "private_household": 5005372.542993815,
+        "other_direct_resource": 722230.6303205581,
+        "productivity": 6895164.928324178,
+        "property": 3299842.2333925497,
+        "qaly_unmonetized": 12.70630859044303,
+        "lives": 0.0,
+        "resource_total_excluding_vsl": 16015241.605319418,
+        "mortality_risk_value": 0.0,
+        "receiver_public_cost_per_changed_episode_mean": 0.0,
+        "receiver_capacity_cost_per_changed_episode_mean": 0.0,
+        "receiver_private_cost_per_changed_episode_mean": 97.77742075172206,
+        "receiver_other_direct_cost_per_changed_episode_mean": 39.28608328925938,
+        "receiver_total_direct_cost_per_changed_episode_mean": 137.06350404098146
+      }
+    },
+    "features": [
+      {
+        "number": 1,
+        "feature": "Public emergency-number education",
+        "linear_shapley_resource_allocation": 51305571.785831854,
+        "linear_shapley_mortality_risk_allocation": 11802134.681604747,
+        "linear_shapley_total_allocation": 63107706.4674366
+      },
+      {
+        "number": 2,
+        "feature": "School-based education",
+        "linear_shapley_resource_allocation": 25652785.892915927,
+        "linear_shapley_mortality_risk_allocation": 5901067.340802373,
+        "linear_shapley_total_allocation": 31553853.2337183
+      },
+      {
+        "number": 3,
+        "feature": "County/local-government education",
+        "linear_shapley_resource_allocation": 25652785.892915927,
+        "linear_shapley_mortality_risk_allocation": 5901067.340802373,
+        "linear_shapley_total_allocation": 31553853.2337183
+      },
+      {
+        "number": 4,
+        "feature": "Alternative-number reminder",
+        "linear_shapley_resource_allocation": 37938355.79268484,
+        "linear_shapley_mortality_risk_allocation": 17703202.02240712,
+        "linear_shapley_total_allocation": 55641557.81509195
+      },
+      {
+        "number": 5,
+        "feature": "Helplines tab",
+        "linear_shapley_resource_allocation": 37847382.25284617,
+        "linear_shapley_mortality_risk_allocation": 11802134.681604747,
+        "linear_shapley_total_allocation": 49649516.93445091
+      },
+      {
+        "number": 6,
+        "feature": "Direct 988 access",
+        "linear_shapley_resource_allocation": 42938278.64066021,
+        "linear_shapley_mortality_risk_allocation": 23604269.363209493,
+        "linear_shapley_total_allocation": 66542548.003869705
+      },
+      {
+        "number": 7,
+        "feature": "Direct 211 access",
+        "linear_shapley_resource_allocation": 6716122.818919854,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 6716122.818919854
+      },
+      {
+        "number": 8,
+        "feature": "Direct local non-emergency access",
+        "linear_shapley_resource_allocation": 2676699.2793038837,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 2676699.2793038837
+      },
+      {
+        "number": 9,
+        "feature": "Global emergency numbers",
+        "linear_shapley_resource_allocation": 9609144.96319165,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 9609144.96319165
+      },
+      {
+        "number": 10,
+        "feature": "Silent emergency text access",
+        "linear_shapley_resource_allocation": 52700.73307281258,
+        "linear_shapley_mortality_risk_allocation": 2122339.6103436723,
+        "linear_shapley_total_allocation": 2175040.343416485
+      },
+      {
+        "number": 11,
+        "feature": "Language preference notification",
+        "linear_shapley_resource_allocation": 35133.822048541726,
+        "linear_shapley_mortality_risk_allocation": 1414893.0735624484,
+        "linear_shapley_total_allocation": 1450026.89561099
+      },
+      {
+        "number": 12,
+        "feature": "Two-way emergency text translation",
+        "linear_shapley_resource_allocation": 35133.822048541726,
+        "linear_shapley_mortality_risk_allocation": 1414893.0735624484,
+        "linear_shapley_total_allocation": 1450026.89561099
+      },
+      {
+        "number": 13,
+        "feature": "Enhanced location verification",
+        "linear_shapley_resource_allocation": 13671587.966519132,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 13671587.966519132
+      },
+      {
+        "number": 14,
+        "feature": "Saved address/access information",
+        "linear_shapley_resource_allocation": 12874721.978776501,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 12874721.978776501
+      },
+      {
+        "number": 15,
+        "feature": "Emergency medical profile",
+        "linear_shapley_resource_allocation": 13782896.807255162,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 13782896.807255162
+      },
+      {
+        "number": 16,
+        "feature": "Emergency caller photo",
+        "linear_shapley_resource_allocation": 5513158.722902065,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 5513158.722902065
+      },
+      {
+        "number": 17,
+        "feature": "Live emergency video",
+        "linear_shapley_resource_allocation": 30577045.53344847,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 30577045.53344847
+      },
+      {
+        "number": 18,
+        "feature": "Emergency contact alerts",
+        "linear_shapley_resource_allocation": 18280518.656580895,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 18280518.656580895
+      },
+      {
+        "number": 19,
+        "feature": "Secondary-call containment",
+        "linear_shapley_resource_allocation": 4584277.64751845,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 4584277.64751845
+      },
+      {
+        "number": 20,
+        "feature": "Safety check-ins/passive monitoring",
+        "linear_shapley_resource_allocation": 9799340.11460551,
+        "linear_shapley_mortality_risk_allocation": 0.0,
+        "linear_shapley_total_allocation": 9799340.11460551
+      },
+      {
+        "number": 21,
+        "feature": "Zero-setup/low-friction design",
+        "linear_shapley_resource_allocation": 57774906.1918851,
+        "linear_shapley_mortality_risk_allocation": 12155857.94999536,
+        "linear_shapley_total_allocation": 69930764.14188045
+      },
+      {
+        "number": 22,
+        "feature": "App/platform integration",
+        "linear_shapley_resource_allocation": 89138126.38094705,
+        "linear_shapley_mortality_risk_allocation": 18410648.559188344,
+        "linear_shapley_total_allocation": 107548774.94013539
+      },
+      {
+        "number": 23,
+        "feature": "Emergency-system compatibility",
+        "linear_shapley_resource_allocation": 70779130.26056324,
+        "linear_shapley_mortality_risk_allocation": 12863304.486776583,
+        "linear_shapley_total_allocation": 83642434.74733981
+      }
+    ],
+    "systems": [
+      {
+        "system": "911/PSAP",
+        "potential_variable_public_expenditure_avoided": 5564652.96273175,
+        "capacity_value": 6788860.277095463,
+        "combined_public_resource": 12353513.239827212
+      },
+      {
+        "system": "EMS",
+        "potential_variable_public_expenditure_avoided": 11164804.683851033,
+        "capacity_value": 3260604.634535712,
+        "combined_public_resource": 14425409.318386745
+      },
+      {
+        "system": "fire",
+        "potential_variable_public_expenditure_avoided": 355610.8906179763,
+        "capacity_value": 633843.8480592166,
+        "combined_public_resource": 989454.738677193
+      },
+      {
+        "system": "police",
+        "potential_variable_public_expenditure_avoided": 4918967.778096968,
+        "capacity_value": 2436003.352224943,
+        "combined_public_resource": 7354971.130321912
+      },
+      {
+        "system": "behavioral health",
+        "potential_variable_public_expenditure_avoided": 5763074.101430187,
+        "capacity_value": 1939242.625082242,
+        "combined_public_resource": 7702316.726512429
+      },
+      {
+        "system": "Medicare",
+        "potential_variable_public_expenditure_avoided": 20668634.12287628,
+        "capacity_value": 3583619.8946429593,
+        "combined_public_resource": 24252254.01751924
+      },
+      {
+        "system": "Medicaid",
+        "potential_variable_public_expenditure_avoided": 18653457.036486182,
+        "capacity_value": 4198405.025949631,
+        "combined_public_resource": 22851862.062435813
+      },
+      {
+        "system": "public hospitals",
+        "potential_variable_public_expenditure_avoided": 20772600.485719047,
+        "capacity_value": 3797997.0859610057,
+        "combined_public_resource": 24570597.571680054
+      },
+      {
+        "system": "long-term care/disability",
+        "potential_variable_public_expenditure_avoided": 13066658.067698382,
+        "capacity_value": 1456281.699609301,
+        "combined_public_resource": 14522939.767307684
+      },
+      {
+        "system": "other public",
+        "potential_variable_public_expenditure_avoided": 6554938.497130692,
+        "capacity_value": 1448166.926968552,
+        "combined_public_resource": 8003105.424099244
+      }
+    ],
+    "families": [
+      {
+        "family": "behavioral health/suicide",
+        "resource_value": 194560603.52262288,
+        "mortality_risk_value": 106219212.13444272,
+        "total_value": 300779815.65706563
+      },
+      {
+        "family": "cardiac arrest",
+        "resource_value": 84007582.09812313,
+        "mortality_risk_value": 0.0,
+        "total_value": 84007582.09812313
+      },
+      {
+        "family": "cardiovascular",
+        "resource_value": 29608016.972568505,
+        "mortality_risk_value": 0.0,
+        "total_value": 29608016.972568505
+      },
+      {
+        "family": "cardiovascular/cardiac arrest",
+        "resource_value": 43917.277560677154,
+        "mortality_risk_value": 1768616.3419530604,
+        "total_value": 1812533.6195137375
+      },
+      {
+        "family": "cardiovascular/stroke",
+        "resource_value": 15269266.737642748,
+        "mortality_risk_value": 0.0,
+        "total_value": 15269266.737642748
+      },
+      {
+        "family": "caregiver crisis",
+        "resource_value": 1460026.6997651858,
+        "mortality_risk_value": 0.0,
+        "total_value": 1460026.6997651858
+      },
+      {
+        "family": "chronic/medication access",
+        "resource_value": 2920053.3995303717,
+        "mortality_risk_value": 0.0,
+        "total_value": 2920053.3995303717
+      },
+      {
+        "family": "endocrine/metabolic",
+        "resource_value": 2799811.461315861,
+        "mortality_risk_value": 0.0,
+        "total_value": 2799811.461315861
+      },
+      {
+        "family": "environmental exposure",
+        "resource_value": 2920053.3995303717,
+        "mortality_risk_value": 0.0,
+        "total_value": 2920053.3995303717
+      },
+      {
+        "family": "falls/TBI/hemorrhage",
+        "resource_value": 8399434.383947581,
+        "mortality_risk_value": 0.0,
+        "total_value": 8399434.383947581
+      },
+      {
+        "family": "fire",
+        "resource_value": 1848472.2783924504,
+        "mortality_risk_value": 0.0,
+        "total_value": 1848472.2783924504
+      },
+      {
+        "family": "fire abroad",
+        "resource_value": 1601524.1605319418,
+        "mortality_risk_value": 0.0,
+        "total_value": 1601524.1605319418
+      },
+      {
+        "family": "fire/public safety",
+        "resource_value": 8269738.084353097,
+        "mortality_risk_value": 0.0,
+        "total_value": 8269738.084353097
+      },
+      {
+        "family": "medical abroad",
+        "resource_value": 8007620.802659709,
+        "mortality_risk_value": 0.0,
+        "total_value": 8007620.802659709
+      },
+      {
+        "family": "medical/EMS",
+        "resource_value": 5598541.234360194,
+        "mortality_risk_value": 0.0,
+        "total_value": 5598541.234360194
+      },
+      {
+        "family": "neurologic/seizure",
+        "resource_value": 8312970.184217926,
+        "mortality_risk_value": 0.0,
+        "total_value": 8312970.184217926
+      },
+      {
+        "family": "obstetric/neonatal/pediatric",
+        "resource_value": 9434786.201909397,
+        "mortality_risk_value": 565957.2294249793,
+        "total_value": 10000743.431334376
+      },
+      {
+        "family": "other abroad",
+        "resource_value": 1601524.1605319418,
+        "mortality_risk_value": 0.0,
+        "total_value": 1601524.1605319418
+      },
+      {
+        "family": "other severe illness",
+        "resource_value": 1399905.7306579305,
+        "mortality_risk_value": 0.0,
+        "total_value": 1399905.7306579305
+      },
+      {
+        "family": "other time-critical",
+        "resource_value": 12259820.40041918,
+        "mortality_risk_value": 707446.5367812242,
+        "total_value": 12967266.937200403
+      },
+      {
+        "family": "police/public safety",
+        "resource_value": 7717975.16638,
+        "mortality_risk_value": 0.0,
+        "total_value": 7717975.16638
+      },
+      {
+        "family": "police/public safety abroad",
+        "resource_value": 4804572.481595825,
+        "mortality_risk_value": 0.0,
+        "total_value": 4804572.481595825
+      },
+      {
+        "family": "respiratory",
+        "resource_value": 29937365.258385323,
+        "mortality_risk_value": 1061169.8051718362,
+        "total_value": 30998535.06355716
+      },
+      {
+        "family": "sepsis/infection",
+        "resource_value": 13475756.444009956,
+        "mortality_risk_value": 707446.5367812242,
+        "total_value": 14183202.98079118
+      },
+      {
+        "family": "social/resource emergencies",
+        "resource_value": 21900400.496477783,
+        "mortality_risk_value": 0.0,
+        "total_value": 21900400.496477783
+      },
+      {
+        "family": "stroke/neurologic",
+        "resource_value": 24259874.98142277,
+        "mortality_risk_value": 1414893.0735624484,
+        "total_value": 25674768.054985218
+      },
+      {
+        "family": "toxicologic/endocrine",
+        "resource_value": 13458189.532985685,
+        "mortality_risk_value": 0.0,
+        "total_value": 13458189.532985685
+      },
+      {
+        "family": "toxicologic/substance use",
+        "resource_value": 21469139.320330106,
+        "mortality_risk_value": 11802134.681604747,
+        "total_value": 33271274.001934852
+      },
+      {
+        "family": "trauma/hemorrhage",
+        "resource_value": 29888863.085213214,
+        "mortality_risk_value": 848935.844137469,
+        "total_value": 30737798.92935068
+      }
+    ],
+    "local_correlation_sensitivity": {
+      "mortality": {
+        "correlation_excluding_vsl": -0.0010360337866163727,
+        "correlation_including_vsl": 0.6162224119197958
+      },
+      "VSL": {
+        "correlation_excluding_vsl": 0.006910179433954626,
+        "correlation_including_vsl": 0.0534710613821543
+      },
+      "medical resource cost": {
+        "correlation_excluding_vsl": 0.17495139790366598,
+        "correlation_including_vsl": 0.1361099939524171
+      },
+      "public operating cost": {
+        "correlation_excluding_vsl": 0.15856413279073087,
+        "correlation_including_vsl": 0.12329981912308353
+      },
+      "productivity": {
+        "correlation_excluding_vsl": 0.19952069457949845,
+        "correlation_including_vsl": 0.15641469064912614
+      },
+      "property": {
+        "correlation_excluding_vsl": 0.15189371524697126,
+        "correlation_including_vsl": 0.11867018433281426
+      },
+      "annualized deployment cost": {
+        "correlation_excluding_vsl": -0.8583190133445538,
+        "correlation_including_vsl": -0.6702381159537417
+      }
+    },
+    "morris_global_screening": [
+      {
+        "assumption": "deployment_cost",
+        "mu_star": 1220209133.5865357,
+        "sigma": 5.216683503875987e-07,
+        "normalized_mu_star": 0.7005193539670732
+      },
+      {
+        "assumption": "receiver_compatibility",
+        "mu_star": 197516935.46304438,
+        "sigma": 77736434.62866461,
+        "normalized_mu_star": 0.11339403403860467
+      },
+      {
+        "assumption": "deployment_reach",
+        "mu_star": 189192406.23618564,
+        "sigma": 78243431.77113453,
+        "normalized_mu_star": 0.10861494029510947
+      },
+      {
+        "assumption": "productivity_value",
+        "mu_star": 71571571.79912102,
+        "sigma": 37684341.82117131,
+        "normalized_mu_star": 0.04108908043636815
+      },
+      {
+        "assumption": "medical_resource_cost",
+        "mu_star": 23523078.223410953,
+        "sigma": 12385528.194702256,
+        "normalized_mu_star": 0.013504546972162246
+      },
+      {
+        "assumption": "mortality_effect",
+        "mu_star": 15987882.937339084,
+        "sigma": 10262834.8838604,
+        "normalized_mu_star": 0.009178608091259375
+      },
+      {
+        "assumption": "vsl",
+        "mu_star": 15369173.906873764,
+        "sigma": 11024053.88745224,
+        "normalized_mu_star": 0.008823408610788987
+      },
+      {
+        "assumption": "public_operating_cost",
+        "mu_star": 7232826.183015783,
+        "sigma": 3808275.93082472,
+        "normalized_mu_star": 0.004152349450286279
+      },
+      {
+        "assumption": "property_value",
+        "mu_star": 1260548.57612159,
+        "sigma": 663712.4521742202,
+        "normalized_mu_star": 0.0007236781383477378
+      }
+    ],
+    "fiscal_realization_sensitivity": {
+      "0": {
+        "mean": -29671.617489520773,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "p97.5": 0.0,
+        "probability_positive": 0.0,
+        "probability_zero": 0.9966333333333334
+      },
+      "25": {
+        "mean": 26848595.943542484,
+        "p2.5": 6044760.405696069,
+        "p5": 8693492.165242529,
+        "p25": 17759170.43579826,
+        "median": 25386904.219144177,
+        "p75": 34468713.64930056,
+        "p95": 50103468.16027619,
+        "p97.5": 55820906.22392891,
+        "probability_positive": 0.9966333333333334,
+        "probability_zero": 0.0
+      },
+      "50": {
+        "mean": 53726863.50457448,
+        "p2.5": 12089520.811392138,
+        "p5": 17386984.330485057,
+        "p25": 35518340.87159652,
+        "median": 50773808.43828835,
+        "p75": 68937427.29860112,
+        "p95": 100206936.32055238,
+        "p97.5": 111641812.44785783,
+        "probability_positive": 0.9966333333333334,
+        "probability_zero": 0.0
+      },
+      "75": {
+        "mean": 80605131.06560649,
+        "p2.5": 18134281.217088208,
+        "p5": 26080476.495727587,
+        "p25": 53277511.30739479,
+        "median": 76160712.65743253,
+        "p75": 103406140.9479017,
+        "p95": 150310404.48082855,
+        "p97.5": 167462718.67178673,
+        "probability_positive": 0.9966333333333334,
+        "probability_zero": 0.0
+      },
+      "100": {
+        "mean": 107483398.6266385,
+        "p2.5": 24179041.622784276,
+        "p5": 34773968.660970114,
+        "p25": 71036681.74319305,
+        "median": 101547616.8765767,
+        "p75": 137874854.59720224,
+        "p95": 200413872.64110476,
+        "p97.5": 223283624.89571565,
+        "probability_positive": 0.9966333333333334,
+        "probability_zero": 0.0
+      }
+    },
+    "stochastic_adoption": [
+      {
+        "year": 1,
+        "mean": 0.02524290914872891,
+        "p2.5": 0.0037872851969123237,
+        "p5": 0.005029516690950103,
+        "p25": 0.011996505368741793,
+        "median": 0.0207861524837267,
+        "p75": 0.0339887264777436,
+        "p95": 0.060625349250729044,
+        "p97.5": 0.07089564125201382,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 2,
+        "mean": 0.05157250096909307,
+        "p2.5": 0.009930119063815858,
+        "p5": 0.012853420015983068,
+        "p25": 0.027825731061482638,
+        "median": 0.04510820860513888,
+        "p75": 0.06903328407258325,
+        "p95": 0.11230462645016645,
+        "p97.5": 0.12790556575889497,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 3,
+        "mean": 0.10239292851836804,
+        "p2.5": 0.025196692722084482,
+        "p5": 0.03184492086858006,
+        "p25": 0.062143672515865604,
+        "median": 0.09418911203749597,
+        "p75": 0.1350368830019894,
+        "p95": 0.20044737930151543,
+        "p97.5": 0.22259168609257232,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 4,
+        "mean": 0.19105557144141372,
+        "p2.5": 0.06083428038912412,
+        "p5": 0.07439757904234555,
+        "p25": 0.13003316560600786,
+        "median": 0.18315203725229318,
+        "p75": 0.24477220775183503,
+        "p95": 0.3346431676144811,
+        "p97.5": 0.36151755544401243,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 5,
+        "mean": 0.3211695638106885,
+        "p2.5": 0.13510961162628407,
+        "p5": 0.15787619217785773,
+        "p25": 0.2440896506853636,
+        "median": 0.3171389546176972,
+        "p75": 0.39446833792888025,
+        "p95": 0.4971571928997731,
+        "p97.5": 0.5267369678720443,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 6,
+        "mean": 0.4715630618009316,
+        "p2.5": 0.2589455391907145,
+        "p5": 0.28995006492369507,
+        "p25": 0.39373270681536293,
+        "median": 0.4735611350096002,
+        "p75": 0.5504126545818305,
+        "p95": 0.6471758734499574,
+        "p97.5": 0.6752624583432908,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 7,
+        "mean": 0.6048826536215908,
+        "p2.5": 0.41056047521207695,
+        "p5": 0.44042458791183065,
+        "p25": 0.5401629101514921,
+        "median": 0.6097461173067078,
+        "p75": 0.6732572587050063,
+        "p95": 0.7543925857353255,
+        "p97.5": 0.77734112078899,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 8,
+        "mean": 0.6977893207158653,
+        "p2.5": 0.5391713765167938,
+        "p5": 0.5649187032016394,
+        "p25": 0.6457591457387369,
+        "median": 0.7010020222410543,
+        "p75": 0.7532880340682246,
+        "p95": 0.8195303987713445,
+        "p97.5": 0.8388290486973602,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 9,
+        "mean": 0.7519573555818019,
+        "p2.5": 0.6168470919587795,
+        "p5": 0.6378713867969321,
+        "p25": 0.7064850602151932,
+        "median": 0.7546619347446173,
+        "p75": 0.8002279254964084,
+        "p95": 0.8570225322657372,
+        "p97.5": 0.8730949159775031,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 10,
+        "mean": 0.7803104453190909,
+        "p2.5": 0.6532235561210582,
+        "p5": 0.6724763022002224,
+        "p25": 0.7370945215024957,
+        "median": 0.7828900045230818,
+        "p75": 0.8261112210935365,
+        "p95": 0.8785052587991836,
+        "p97.5": 0.8925394944369448,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    ],
+    "named_adoption_scenarios": [
+      {
+        "scenario": "delayed",
+        "asymptote": 0.65,
+        "midpoint_year": 7.0,
+        "slope": 0.55,
+        "year_1": 0.023121273027213507,
+        "year_5": 0.16233093136317353,
+        "year_10": 0.5452791827752196
+      },
+      {
+        "scenario": "central",
+        "asymptote": 0.85,
+        "midpoint_year": 5.5,
+        "slope": 0.8,
+        "year_1": 0.022607444540335975,
+        "year_5": 0.3411154889044158,
+        "year_10": 0.827392555459664
+      },
+      {
+        "scenario": "accelerated",
+        "asymptote": 0.95,
+        "midpoint_year": 4.0,
+        "slope": 1.1,
+        "year_1": 0.033792629809004354,
+        "year_5": 0.7127471003153617,
+        "year_10": 0.9487094060470925
+      }
+    ],
+    "ten_year_projection": [
+      {
+        "year": 1,
+        "adoption_mean": 0.02524290914872891,
+        "adoption_p5": 0.005029516690950103,
+        "adoption_p95": 0.060625349250729044,
+        "gross_excluding_vsl_mean": 14325174.037876248,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 22647616.18583401,
+        "rollout_capital_outlay_mean": 67816523.75942372,
+        "net_excluding_vsl_mean": -645824475.8589711
+      },
+      {
+        "year": 2,
+        "adoption_mean": 0.05157250096909307,
+        "adoption_p5": 0.012853420015983068,
+        "adoption_p95": 0.11230462645016645,
+        "gross_excluding_vsl_mean": 29264466.786643937,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 46268066.04105444,
+        "rollout_capital_outlay_mean": 70748769.08728912,
+        "net_excluding_vsl_mean": -657437878.2932893
+      },
+      {
+        "year": 3,
+        "adoption_mean": 0.10239292851836804,
+        "adoption_p5": 0.03184492086858006,
+        "adoption_p95": 0.20044737930151543,
+        "gross_excluding_vsl_mean": 58098861.109585784,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 91855694.2675279,
+        "rollout_capital_outlay_mean": 136568618.87204424,
+        "net_excluding_vsl_mean": -740010961.981576
+      },
+      {
+        "year": 4,
+        "adoption_mean": 0.19105557144141372,
+        "adoption_p5": 0.07439757904234555,
+        "adoption_p95": 0.3346431676144811,
+        "gross_excluding_vsl_mean": 108406008.74604248,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 171380989.89084852,
+        "rollout_capital_outlay_mean": 238267964.36796114,
+        "net_excluding_vsl_mean": -870928455.4643568
+      },
+      {
+        "year": 5,
+        "adoption_mean": 0.3211695638106885,
+        "adoption_p5": 0.15787619217785773,
+        "adoption_p95": 0.4971571928997731,
+        "gross_excluding_vsl_mean": 182239465.21759486,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 288071880.22377336,
+        "rollout_capital_outlay_mean": 349628574.01597905,
+        "net_excluding_vsl_mean": -1025146498.9737473
+      },
+      {
+        "year": 6,
+        "adoption_mean": 0.4715630618009316,
+        "adoption_p5": 0.28995006492369507,
+        "adoption_p95": 0.6471758734499574,
+        "gross_excluding_vsl_mean": 267584592.4473761,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 422931831.6250128,
+        "rollout_capital_outlay_mean": 404018453.9118022,
+        "net_excluding_vsl_mean": -1129051203.0410285
+      },
+      {
+        "year": 7,
+        "adoption_mean": 0.6048826536215908,
+        "adoption_p5": 0.44042458791183065,
+        "adoption_p95": 0.7543925857353255,
+        "gross_excluding_vsl_mean": 343228233.72901464,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 542466441.363009,
+        "rollout_capital_outlay_mean": 358048211.5933522,
+        "net_excluding_vsl_mean": -1126971929.1789362
+      },
+      {
+        "year": 8,
+        "adoption_mean": 0.6977893207158653,
+        "adoption_p5": 0.5649187032016394,
+        "adoption_p95": 0.8195303987713445,
+        "gross_excluding_vsl_mean": 395920145.47450185,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 625759482.8629428,
+        "rollout_capital_outlay_mean": 249463732.5722892,
+        "net_excluding_vsl_mean": -1048988579.9123198
+      },
+      {
+        "year": 9,
+        "adoption_mean": 0.7519573555818019,
+        "adoption_p5": 0.6378713867969321,
+        "adoption_p95": 0.8570225322657372,
+        "gross_excluding_vsl_mean": 426626751.155891,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 674319045.6623708,
+        "rollout_capital_outlay_mean": 145425783.47400197,
+        "net_excluding_vsl_mean": -962803587.9320713
+      },
+      {
+        "year": 10,
+        "adoption_mean": 0.7803104453190909,
+        "adoption_p5": 0.6724763022002224,
+        "adoption_p95": 0.8785052587991836,
+        "gross_excluding_vsl_mean": 442693740.10983205,
+        "fixed_recurring_cost_mean": 569685509.9515896,
+        "adoption_dependent_recurring_cost_mean": 699734995.2631493,
+        "rollout_capital_outlay_mean": 76112696.27800132,
+        "net_excluding_vsl_mean": -902839461.3829081
+      }
+    ],
+    "break_even_annual_cost": {
+      "fiscal_only_at_100_percent_realization": {
+        "mean": 107483398.6266385,
+        "p2.5": 24179041.622784276,
+        "p5": 34773968.660970114,
+        "p25": 71036681.74319305,
+        "median": 101547616.8765767,
+        "p75": 137874854.59720224,
+        "p95": 200413872.64110476,
+        "p97.5": 223283624.89571565,
+        "probability_positive": 0.9966333333333334,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 567235805.9574417,
+        "p2.5": 307279194.16152906,
+        "p5": 337658393.9275733,
+        "p25": 451459215.502782,
+        "median": 547469321.2966843,
+        "p75": 661566057.3237576,
+        "p95": 862899294.2418457,
+        "p97.5": 938542373.4067631,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "all_pathway_societal_including_vsl": {
+        "mean": 692331618.1413013,
+        "p2.5": 324314078.32892,
+        "p5": 357854802.06573564,
+        "p25": 485995483.9577881,
+        "median": 611607436.1721783,
+        "p75": 810102670.1581726,
+        "p95": 1317086801.26194,
+        "p97.5": 1497107521.39041,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    }
+  },
+  "mature": {
+    "scenario": "mature",
+    "summaries": {
+      "potential_variable_public_expenditure_avoided": {
+        "mean": 386996918.0074504,
+        "p2.5": 88759625.08775847,
+        "p5": 119735161.53877686,
+        "p25": 242537067.0618272,
+        "median": 356016663.7875864,
+        "p75": 497876647.45166266,
+        "p95": 761065913.4436085,
+        "p97.5": 859936240.2662883,
+        "probability_positive": 0.9986333333333334,
+        "probability_zero": 0.0
+      },
+      "capacity": {
+        "mean": 86918210.19818418,
+        "p2.5": 31916980.701751214,
+        "p5": 37556592.2199909,
+        "p25": 60210061.46076627,
+        "median": 81705925.33287507,
+        "p75": 107685775.55078942,
+        "p95": 154198429.18982047,
+        "p97.5": 171959233.2653011,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "private_household": {
+        "mean": 362557392.6860756,
+        "p2.5": 122586935.5986683,
+        "p5": 148279751.1400888,
+        "p25": 247291214.41455185,
+        "median": 339313739.9021961,
+        "p75": 451946610.5905973,
+        "p95": 660561635.7779583,
+        "p97.5": 737528198.5594659,
+        "probability_positive": 0.9999333333333333,
+        "probability_zero": 0.0
+      },
+      "other_direct_resource": {
+        "mean": 78626009.73088539,
+        "p2.5": 18361694.55659791,
+        "p5": 25184266.371780306,
+        "p25": 49732782.70232271,
+        "median": 72413293.75868005,
+        "p75": 100844728.94763364,
+        "p95": 152969700.73254862,
+        "p97.5": 173738118.8829469,
+        "probability_positive": 0.99815,
+        "probability_zero": 0.0
+      },
+      "productivity": {
+        "mean": 1055220569.3043909,
+        "p2.5": 360763137.9470068,
+        "p5": 425250018.2103572,
+        "p25": 696069630.7062454,
+        "median": 962431354.8191085,
+        "p75": 1315066754.6183217,
+        "p95": 2009252185.9187152,
+        "p97.5": 2275870659.3518853,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "property": {
+        "mean": 60289941.59144898,
+        "p2.5": 11332281.298149506,
+        "p5": 14815116.095496036,
+        "p25": 31636956.658040904,
+        "median": 50459210.24640554,
+        "p75": 78307943.64314702,
+        "p95": 138343901.03347054,
+        "p97.5": 164972467.16942558,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "direct_resource": {
+        "mean": 915098530.6225955,
+        "p2.5": 382892562.73104036,
+        "p5": 443306733.87472236,
+        "p25": 666201882.7333215,
+        "median": 870523118.0297265,
+        "p75": 1114584451.9125822,
+        "p95": 1538735146.9718308,
+        "p97.5": 1708234826.647279,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "direct_process_conservative_benchmark": {
+        "mean": 548109802.6785041,
+        "p2.5": 211630119.60308084,
+        "p5": 248050901.3788085,
+        "p25": 389782302.64532197,
+        "median": 518432164.73075217,
+        "p75": 675251908.2122167,
+        "p95": 945787654.3439187,
+        "p97.5": 1053829925.7137344,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "qaly_unmonetized": {
+        "mean": 3252.728998270695,
+        "p2.5": 1099.051406863781,
+        "p5": 1299.9027948726061,
+        "p25": 2144.182708549852,
+        "median": 2964.9191589878146,
+        "p75": 4056.6310568082245,
+        "p95": 6180.98856298831,
+        "p97.5": 7034.995306556953,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "qaly_valuation_sensitivity": {
+        "mean": 2357358629.2910657,
+        "p2.5": 751804956.7866876,
+        "p5": 892308611.1333815,
+        "p25": 1496262368.5201466,
+        "median": 2122591487.9768517,
+        "p75": 2954218548.168748,
+        "p95": 4625704846.434223,
+        "p97.5": 5308860075.255125,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "call_taker_hours": {
+        "mean": 234274.2120655155,
+        "p2.5": 77355.86912661996,
+        "p5": 92044.25101933628,
+        "p25": 153823.18528330553,
+        "median": 215354.10444401158,
+        "p75": 293974.69201154594,
+        "p95": 440974.32074177824,
+        "p97.5": 499441.21804810455,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "workdays_preserved": {
+        "mean": 2769961.1845476287,
+        "p2.5": 957533.5358909303,
+        "p5": 1131017.8119231737,
+        "p25": 1840601.689780692,
+        "median": 2535638.6483400706,
+        "p75": 3447918.925531893,
+        "p95": 5197397.629749541,
+        "p97.5": 5897940.293659823,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "lives": {
+        "mean": 366.70926218596077,
+        "p2.5": -100.51814170646324,
+        "p5": -65.14740456651532,
+        "p25": 19.712486226555818,
+        "median": 214.92931995338193,
+        "p75": 544.9675994020389,
+        "p95": 1316.3051211558193,
+        "p97.5": 1647.9560292743145,
+        "probability_positive": 0.7922833333333333,
+        "probability_zero": 0.0198
+      },
+      "domestic_lives": {
+        "mean": 365.29813740193663,
+        "p2.5": -101.30189236266712,
+        "p5": -66.13976480387892,
+        "p25": 17.907727235021177,
+        "median": 213.4209971275519,
+        "p75": 543.6081683316281,
+        "p95": 1314.3455506560567,
+        "p97.5": 1645.6210116227153,
+        "probability_positive": 0.7727833333333334,
+        "probability_zero": 0.035366666666666664
+      },
+      "traveler_lives": {
+        "mean": 1.411124784024153,
+        "p2.5": -9.49007777949965,
+        "p5": -6.533631032467707,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 3.147638878464349,
+        "p95": 12.146324682969666,
+        "p97.5": 15.31517031218227,
+        "probability_positive": 0.2913833333333333,
+        "probability_zero": 0.54365
+      },
+      "tier_c_zero_lives": {
+        "mean": 180.64956444872496,
+        "p2.5": -113.03511919931316,
+        "p5": -79.16720349391039,
+        "p25": 0.0,
+        "median": 100.54688524857094,
+        "p75": 266.6794119722099,
+        "p95": 728.5967110795094,
+        "p97.5": 947.9078396512258,
+        "probability_positive": 0.7258166666666667,
+        "probability_zero": 0.02723333333333333
+      },
+      "adverse_only_lives": {
+        "mean": -41.14650328201504,
+        "p2.5": -176.4800383031262,
+        "p5": -141.64901034197416,
+        "p25": -60.661631755687,
+        "median": -23.35171848871061,
+        "p75": -4.031765505916714,
+        "p95": 0.0,
+        "p97.5": 0.0,
+        "probability_positive": 0.0,
+        "probability_zero": 0.15031666666666665
+      },
+      "mortality_vsl": {
+        "mean": 5173846610.747602,
+        "p2.5": -1428249611.5063915,
+        "p5": -899657069.925164,
+        "p25": 273876021.9327346,
+        "median": 2980470281.9097977,
+        "p75": 7631527524.361139,
+        "p95": 18750114519.203903,
+        "p97.5": 23609983066.500828,
+        "probability_positive": 0.7922833333333333,
+        "probability_zero": 0.0198
+      },
+      "mortality_neutral_societal": {
+        "mean": 2030609041.5184355,
+        "p2.5": 889079455.7706462,
+        "p5": 1012365301.2272949,
+        "p25": 1491182554.4282737,
+        "median": 1923720299.1050353,
+        "p75": 2454258715.983073,
+        "p95": 3410178414.5512896,
+        "p97.5": 3767923350.4071035,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_excluding_vsl": {
+        "mean": 2030609041.5184355,
+        "p2.5": 889079455.7706462,
+        "p5": 1012365301.2272949,
+        "p25": 1491182554.4282737,
+        "median": 1923720299.1050353,
+        "p75": 2454258715.983073,
+        "p95": 3410178414.5512896,
+        "p97.5": 3767923350.4071035,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7204455652.266038,
+        "p2.5": 475766867.68188787,
+        "p5": 842543710.777031,
+        "p25": 2356520797.801558,
+        "median": 4945468635.763174,
+        "p75": 9703490040.884705,
+        "p95": 21105123528.895588,
+        "p97.5": 26144852868.297215,
+        "probability_positive": 0.9892,
+        "probability_zero": 0.0
+      },
+      "tier_c_zero_societal_including_vsl": {
+        "mean": 4577701430.525585,
+        "p2.5": 337752233.6574494,
+        "p5": 700471723.9505013,
+        "p25": 1901766280.32204,
+        "median": 3373551180.2229033,
+        "p75": 5882283950.259928,
+        "p95": 12617703630.921732,
+        "p97.5": 15999839931.414637,
+        "probability_positive": 0.9858833333333333,
+        "probability_zero": 0.0
+      },
+      "adverse_only_societal_including_vsl": {
+        "mean": 1449866161.360063,
+        "p2.5": -415824188.3121743,
+        "p5": -19098737.096424874,
+        "p25": 903470028.6009251,
+        "median": 1427715564.1822927,
+        "p75": 1999007878.405463,
+        "p95": 2976803053.226395,
+        "p97.5": 3344024537.3762894,
+        "probability_positive": 0.9485166666666667,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2104959972.3653734,
+        "p2.5": 1306625522.520485,
+        "p5": 1407642914.0204985,
+        "p25": 1779966051.7156153,
+        "median": 2077728718.8052645,
+        "p75": 2402046551.108125,
+        "p95": 2895452554.473493,
+        "p97.5": 3054229185.4251738,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "full_annualized_cost_stress": {
+        "mean": 2104959972.3653734,
+        "p2.5": 1306625522.5204847,
+        "p5": 1407642914.0204985,
+        "p25": 1779966051.7156155,
+        "median": 2077728718.8052645,
+        "p75": 2402046551.108125,
+        "p95": 2895452554.473493,
+        "p97.5": 3054229185.4251738,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "deployment_cost_maturity": {
+        "mean": 1.0,
+        "p2.5": 1.0,
+        "p5": 1.0,
+        "p25": 1.0,
+        "median": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "p97.5": 1.0,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "public_net_at_50_percent_realization": {
+        "mean": -1163110194.7867925,
+        "p2.5": -1924340771.518091,
+        "p5": -1786237436.3770957,
+        "p25": -1386727701.5434086,
+        "median": -1138084342.9151378,
+        "p75": -911929368.8227503,
+        "p95": -627174894.903093,
+        "p97.5": -541680777.7409115,
+        "probability_positive": 1.6666666666666667e-05,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -74350930.84693812,
+        "p2.5": -1604312332.5253801,
+        "p5": -1376126635.072581,
+        "p25": -680505971.6412193,
+        "median": -144512086.83386827,
+        "p75": 454323580.66547155,
+        "p95": 1461254110.5594876,
+        "p97.5": 1844848787.4263935,
+        "probability_positive": 0.4320333333333333,
+        "probability_zero": 0.0
+      },
+      "net_benefit_including_vsl": {
+        "mean": 5099495679.900663,
+        "p2.5": -1812761834.8241458,
+        "p5": -1382626470.693448,
+        "p25": 279635645.92709404,
+        "median": 2860519309.343404,
+        "p75": 7610837081.431103,
+        "p95": 18994772530.0214,
+        "p97.5": 24060189123.08324,
+        "probability_positive": 0.7850333333333334,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.012005021120586,
+        "p2.5": 0.3913895204623945,
+        "p5": 0.45101907563344257,
+        "p25": 0.6936398443794155,
+        "median": 0.9289926537626922,
+        "p75": 1.2397581707128265,
+        "p95": 1.8546049566773577,
+        "p97.5": 2.10877934454678,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_including_vsl": {
+        "mean": 3.590069247385769,
+        "p2.5": 0.22151530289209542,
+        "p5": 0.39232807361780286,
+        "p25": 1.1353764318779662,
+        "median": 2.4043819630993704,
+        "p75": 4.78217197428218,
+        "p95": 10.752241195770479,
+        "p97.5": 13.651960161509088,
+        "probability_positive": 0.9892,
+        "probability_zero": 0.0
+      },
+      "ten_year_discounted_gross_excluding_vsl": {
+        "mean": 4940809589.622629,
+        "p2.5": 1975626555.0822785,
+        "p5": 2271819152.4663005,
+        "p25": 3481460848.984532,
+        "median": 4622968455.600456,
+        "p75": 6040612062.389154,
+        "p95": 8705923272.379503,
+        "p97.5": 9717528588.39947,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "ten_year_discounted_net_excluding_vsl": {
+        "mean": -4471631723.093466,
+        "p2.5": -9681937614.780802,
+        "p5": -8826560511.557602,
+        "p25": -6310471001.458386,
+        "median": -4546227500.998124,
+        "p75": -2736007580.4113903,
+        "p95": 141848931.8327723,
+        "p97.5": 1208313560.4075656,
+        "probability_positive": 0.05506666666666667,
+        "probability_zero": 0.0
+      }
+    },
+    "distribution_form": "pert",
+    "dependence_rho": 0.5,
+    "copula_family": "gaussian",
+    "path_means": {
+      "988/crisis connection": {
+        "affected_unique_episodes": 269855.433989043,
+        "potential_variable_public_expenditure_avoided": 28497431.321927372,
+        "capacity_value": 9802239.955603035,
+        "gross_public_resource_value": 38299671.2775304,
+        "private_household": 39827676.92072826,
+        "other_direct_resource": 2382384.92379598,
+        "productivity": 85287621.90869789,
+        "property": 0.0,
+        "qaly_unmonetized": 192.59088532252008,
+        "lives": 46.60496725801636,
+        "resource_total_excluding_vsl": 165797355.03075254,
+        "mortality_risk_value": 657308207.4665977,
+        "receiver_public_cost_per_changed_episode_mean": 100.56507439989049,
+        "receiver_capacity_cost_per_changed_episode_mean": 24.48375255732952,
+        "receiver_private_cost_per_changed_episode_mean": 26.556527638763235,
+        "receiver_other_direct_cost_per_changed_episode_mean": 32.482227600713315,
+        "receiver_total_direct_cost_per_changed_episode_mean": 184.08758219669656
+      },
+      "211 social/health referral": {
+        "affected_unique_episodes": 140526.54388068357,
+        "potential_variable_public_expenditure_avoided": 6719160.878706814,
+        "capacity_value": 1231796.8476326992,
+        "gross_public_resource_value": 7950957.726339513,
+        "private_household": 14572946.519775147,
+        "other_direct_resource": 1803111.1358298503,
+        "productivity": 34884886.30483655,
+        "property": 0.0,
+        "qaly_unmonetized": 56.4034787192824,
+        "lives": 2.5312016989089967,
+        "resource_total_excluding_vsl": 59211901.686781056,
+        "mortality_risk_value": 35699239.05105098,
+        "receiver_public_cost_per_changed_episode_mean": 42.4251097922464,
+        "receiver_capacity_cost_per_changed_episode_mean": 12.22951863750697,
+        "receiver_private_cost_per_changed_episode_mean": 14.004297068488373,
+        "receiver_other_direct_cost_per_changed_episode_mean": 13.198955104701653,
+        "receiver_total_direct_cost_per_changed_episode_mean": 81.8578806029434
+      },
+      "911 diversion/capacity": {
+        "affected_unique_episodes": 2058914.9806572457,
+        "potential_variable_public_expenditure_avoided": 709630.1009634796,
+        "capacity_value": 10018684.35883691,
+        "gross_public_resource_value": 10728314.45980039,
+        "private_household": 101702.49394906305,
+        "other_direct_resource": 102058.14569624538,
+        "productivity": 1281021.3269129754,
+        "property": 0.0,
+        "qaly_unmonetized": 0.0,
+        "lives": 0.5127524364657658,
+        "resource_total_excluding_vsl": 12213096.426358674,
+        "mortality_risk_value": 7228363.968752025,
+        "receiver_public_cost_per_changed_episode_mean": 0.7393913124853767,
+        "receiver_capacity_cost_per_changed_episode_mean": 0.6104346814947931,
+        "receiver_private_cost_per_changed_episode_mean": 0.1300258328689756,
+        "receiver_other_direct_cost_per_changed_episode_mean": 0.13031007497583136,
+        "receiver_total_direct_cost_per_changed_episode_mean": 1.6101619018249766
+      },
+      "earlier correct 911 access": {
+        "affected_unique_episodes": 593833.3137529073,
+        "potential_variable_public_expenditure_avoided": 118058349.32486065,
+        "capacity_value": 23501070.1901389,
+        "gross_public_resource_value": 141559419.51499954,
+        "private_household": 98559499.15869522,
+        "other_direct_resource": 23964624.050200585,
+        "productivity": 430430367.02481866,
+        "property": 0.0,
+        "qaly_unmonetized": 1165.7194610422516,
+        "lives": 110.63403733984175,
+        "resource_total_excluding_vsl": 694513909.7487141,
+        "mortality_risk_value": 1561862970.612725,
+        "receiver_public_cost_per_changed_episode_mean": 9.870475655056405,
+        "receiver_capacity_cost_per_changed_episode_mean": 3.897143049188451,
+        "receiver_private_cost_per_changed_episode_mean": 6.962240239159263,
+        "receiver_other_direct_cost_per_changed_episode_mean": 3.1172968408695936,
+        "receiver_total_direct_cost_per_changed_episode_mean": 23.84715578427371
+      },
+      "cardiac-arrest rapid assistance": {
+        "affected_unique_episodes": 35312.77872428683,
+        "potential_variable_public_expenditure_avoided": 89630235.60087352,
+        "capacity_value": 3002687.218369858,
+        "gross_public_resource_value": 92632922.81924339,
+        "private_household": 60805325.55370837,
+        "other_direct_resource": 18635123.862664804,
+        "productivity": 104493803.69461608,
+        "property": 0.0,
+        "qaly_unmonetized": 411.34534521422256,
+        "lives": 74.26533436492703,
+        "resource_total_excluding_vsl": 276567175.93023264,
+        "mortality_risk_value": 1046826434.4330587,
+        "receiver_public_cost_per_changed_episode_mean": 19.933941008248375,
+        "receiver_capacity_cost_per_changed_episode_mean": 6.531895822770358,
+        "receiver_private_cost_per_changed_episode_mean": 21.971689077346973,
+        "receiver_other_direct_cost_per_changed_episode_mean": 8.000011536543624,
+        "receiver_total_direct_cost_per_changed_episode_mean": 56.43753744490933
+      },
+      "silent/language access": {
+        "affected_unique_episodes": 244154.84011634145,
+        "potential_variable_public_expenditure_avoided": 9377173.97862821,
+        "capacity_value": 4435985.476437153,
+        "gross_public_resource_value": 13813159.455065364,
+        "private_household": 8404956.620507522,
+        "other_direct_resource": 2085859.5113539733,
+        "productivity": 34652092.063751504,
+        "property": 0.0,
+        "qaly_unmonetized": 131.28588540452446,
+        "lives": 22.198807372047916,
+        "resource_total_excluding_vsl": 58956067.65067837,
+        "mortality_risk_value": 313373058.7120741,
+        "receiver_public_cost_per_changed_episode_mean": 9.98554582844494,
+        "receiver_capacity_cost_per_changed_episode_mean": 4.810436408911814,
+        "receiver_private_cost_per_changed_episode_mean": 5.192079367383511,
+        "receiver_other_direct_cost_per_changed_episode_mean": 2.799182062652097,
+        "receiver_total_direct_cost_per_changed_episode_mean": 22.78724366739236
+      },
+      "location/responder access": {
+        "affected_unique_episodes": 457160.4325717166,
+        "potential_variable_public_expenditure_avoided": 43945214.65783673,
+        "capacity_value": 18936090.68156804,
+        "gross_public_resource_value": 62881305.33940476,
+        "private_household": 36978161.579165526,
+        "other_direct_resource": 9594253.031230249,
+        "productivity": 111065577.64074078,
+        "property": 32623033.08741203,
+        "qaly_unmonetized": 496.6001081288996,
+        "lives": 61.617919578510865,
+        "resource_total_excluding_vsl": 253142330.67795336,
+        "mortality_risk_value": 868745022.2357688,
+        "receiver_public_cost_per_changed_episode_mean": 6.512802275094703,
+        "receiver_capacity_cost_per_changed_episode_mean": 3.9003923189290957,
+        "receiver_private_cost_per_changed_episode_mean": 4.408849455854704,
+        "receiver_other_direct_cost_per_changed_episode_mean": 2.8008705188941345,
+        "receiver_total_direct_cost_per_changed_episode_mean": 17.622914568772636
+      },
+      "medical data/photo/video": {
+        "affected_unique_episodes": 585830.4188537138,
+        "potential_variable_public_expenditure_avoided": 58541974.94146049,
+        "capacity_value": 15968073.935506273,
+        "gross_public_resource_value": 74510048.87696676,
+        "private_household": 46289220.8737105,
+        "other_direct_resource": 10055393.212720348,
+        "productivity": 138419143.38760653,
+        "property": 5787654.3307544,
+        "qaly_unmonetized": 511.722603655819,
+        "lives": 36.97034462201528,
+        "resource_total_excluding_vsl": 275061460.6817585,
+        "mortality_risk_value": 521875972.17187786,
+        "receiver_public_cost_per_changed_episode_mean": 22.568460702437868,
+        "receiver_capacity_cost_per_changed_episode_mean": 7.876454711076568,
+        "receiver_private_cost_per_changed_episode_mean": 14.016266129675452,
+        "receiver_other_direct_cost_per_changed_episode_mean": 7.911511459957786,
+        "receiver_total_direct_cost_per_changed_episode_mean": 52.372693003147674
+      },
+      "contacts/passive monitoring": {
+        "affected_unique_episodes": 28649.903943829086,
+        "potential_variable_public_expenditure_avoided": 30897660.666756704,
+        "capacity_value": 21581.534091314443,
+        "gross_public_resource_value": 30919242.20084802,
+        "private_household": 23645595.13909401,
+        "other_direct_resource": 5234489.24957175,
+        "productivity": 68438654.56941617,
+        "property": 0.0,
+        "qaly_unmonetized": 201.959616570504,
+        "lives": 9.962772731202643,
+        "resource_total_excluding_vsl": 128237981.15892994,
+        "mortality_risk_value": 141062432.8546764,
+        "receiver_public_cost_per_changed_episode_mean": 394.23583905428484,
+        "receiver_capacity_cost_per_changed_episode_mean": 66.05351599175671,
+        "receiver_private_cost_per_changed_episode_mean": 160.51081441719563,
+        "receiver_other_direct_cost_per_changed_episode_mean": 70.86018254096005,
+        "receiver_total_direct_cost_per_changed_episode_mean": 691.6603520041973
+      },
+      "U.S. traveler abroad": {
+        "affected_unique_episodes": 31276.23610091691,
+        "potential_variable_public_expenditure_avoided": 620086.5354364801,
+        "capacity_value": 0.0,
+        "gross_public_resource_value": 620086.5354364801,
+        "private_household": 33372307.826742057,
+        "other_direct_resource": 4768712.607821594,
+        "productivity": 46267401.38299375,
+        "property": 21879254.173282545,
+        "qaly_unmonetized": 85.10161421267142,
+        "lives": 1.411124784024153,
+        "resource_total_excluding_vsl": 106907762.52627644,
+        "mortality_risk_value": 19864909.241020605,
+        "receiver_public_cost_per_changed_episode_mean": 0.0,
+        "receiver_capacity_cost_per_changed_episode_mean": 0.0,
+        "receiver_private_cost_per_changed_episode_mean": 98.27012461699024,
+        "receiver_other_direct_cost_per_changed_episode_mean": 39.23945401779785,
+        "receiver_total_direct_cost_per_changed_episode_mean": 137.50957863478808
+      }
+    },
+    "features": [
+      {
+        "number": 1,
+        "feature": "Public emergency-number education",
+        "linear_shapley_resource_allocation": 161403707.6214962,
+        "linear_shapley_mortality_risk_allocation": 381673338.7743099,
+        "linear_shapley_total_allocation": 543077046.3958061
+      },
+      {
+        "number": 2,
+        "feature": "School-based education",
+        "linear_shapley_resource_allocation": 80701853.8107481,
+        "linear_shapley_mortality_risk_allocation": 190836669.38715494,
+        "linear_shapley_total_allocation": 271538523.19790304
+      },
+      {
+        "number": 3,
+        "feature": "County/local-government education",
+        "linear_shapley_resource_allocation": 80701853.8107481,
+        "linear_shapley_mortality_risk_allocation": 190836669.38715494,
+        "linear_shapley_total_allocation": 271538523.19790304
+      },
+      {
+        "number": 4,
+        "feature": "Alternative-number reminder",
+        "linear_shapley_resource_allocation": 35028305.563616276,
+        "linear_shapley_mortality_risk_allocation": 104687230.79830377,
+        "linear_shapley_total_allocation": 139715536.36192006
+      },
+      {
+        "number": 5,
+        "feature": "Helplines tab",
+        "linear_shapley_resource_allocation": 91952316.64662477,
+        "linear_shapley_mortality_risk_allocation": 225487041.71303737,
+        "linear_shapley_total_allocation": 317439358.3596622
+      },
+      {
+        "number": 6,
+        "feature": "Direct 988 access",
+        "linear_shapley_resource_allocation": 33159471.00615051,
+        "linear_shapley_mortality_risk_allocation": 131461641.49331954,
+        "linear_shapley_total_allocation": 164621112.49947006
+      },
+      {
+        "number": 7,
+        "feature": "Direct 211 access",
+        "linear_shapley_resource_allocation": 13618737.387959644,
+        "linear_shapley_mortality_risk_allocation": 8210824.981741726,
+        "linear_shapley_total_allocation": 21829562.36970137
+      },
+      {
+        "number": 8,
+        "feature": "Direct local non-emergency access",
+        "linear_shapley_resource_allocation": 3663928.927907602,
+        "linear_shapley_mortality_risk_allocation": 2168509.1906256075,
+        "linear_shapley_total_allocation": 5832438.118533209
+      },
+      {
+        "number": 9,
+        "feature": "Global emergency numbers",
+        "linear_shapley_resource_allocation": 64144657.51576586,
+        "linear_shapley_mortality_risk_allocation": 11918945.544612363,
+        "linear_shapley_total_allocation": 76063603.06037822
+      },
+      {
+        "number": 10,
+        "feature": "Silent emergency text access",
+        "linear_shapley_resource_allocation": 17686820.29520351,
+        "linear_shapley_mortality_risk_allocation": 94011917.61362223,
+        "linear_shapley_total_allocation": 111698737.90882574
+      },
+      {
+        "number": 11,
+        "feature": "Language preference notification",
+        "linear_shapley_resource_allocation": 11791213.530135674,
+        "linear_shapley_mortality_risk_allocation": 62674611.742414825,
+        "linear_shapley_total_allocation": 74465825.2725505
+      },
+      {
+        "number": 12,
+        "feature": "Two-way emergency text translation",
+        "linear_shapley_resource_allocation": 11791213.530135674,
+        "linear_shapley_mortality_risk_allocation": 62674611.742414825,
+        "linear_shapley_total_allocation": 74465825.2725505
+      },
+      {
+        "number": 13,
+        "feature": "Enhanced location verification",
+        "linear_shapley_resource_allocation": 155399125.1946139,
+        "linear_shapley_mortality_risk_allocation": 547959225.1710547,
+        "linear_shapley_total_allocation": 703358350.3656687
+      },
+      {
+        "number": 14,
+        "feature": "Saved address/access information",
+        "linear_shapley_resource_allocation": 117427775.5929209,
+        "linear_shapley_mortality_risk_allocation": 417647471.8356894,
+        "linear_shapley_total_allocation": 535075247.4286103
+      },
+      {
+        "number": 15,
+        "feature": "Emergency medical profile",
+        "linear_shapley_resource_allocation": 68765365.17043963,
+        "linear_shapley_mortality_risk_allocation": 130468993.04296947,
+        "linear_shapley_total_allocation": 199234358.2134091
+      },
+      {
+        "number": 16,
+        "feature": "Emergency caller photo",
+        "linear_shapley_resource_allocation": 27506146.068175852,
+        "linear_shapley_mortality_risk_allocation": 52187597.21718779,
+        "linear_shapley_total_allocation": 79693743.28536364
+      },
+      {
+        "number": 17,
+        "feature": "Live emergency video",
+        "linear_shapley_resource_allocation": 137756587.62815037,
+        "linear_shapley_mortality_risk_allocation": 339680555.42511606,
+        "linear_shapley_total_allocation": 477437143.0532664
+      },
+      {
+        "number": 18,
+        "feature": "Emergency contact alerts",
+        "linear_shapley_resource_allocation": 73544571.67926738,
+        "linear_shapley_mortality_risk_allocation": 192289573.3786279,
+        "linear_shapley_total_allocation": 265834145.05789527
+      },
+      {
+        "number": 19,
+        "feature": "Secondary-call containment",
+        "linear_shapley_resource_allocation": 15266417.40116473,
+        "linear_shapley_mortality_risk_allocation": 15551916.079218045,
+        "linear_shapley_total_allocation": 30818333.480382774
+      },
+      {
+        "number": 20,
+        "feature": "Safety check-ins/passive monitoring",
+        "linear_shapley_resource_allocation": 44883293.40562548,
+        "linear_shapley_mortality_risk_allocation": 49371851.49913674,
+        "linear_shapley_total_allocation": 94255144.90476221
+      },
+      {
+        "number": 21,
+        "feature": "Zero-setup/low-friction design",
+        "linear_shapley_resource_allocation": 196060664.68318152,
+        "linear_shapley_mortality_risk_allocation": 501870321.64618796,
+        "linear_shapley_total_allocation": 697930986.3293695
+      },
+      {
+        "number": 22,
+        "feature": "App/platform integration",
+        "linear_shapley_resource_allocation": 314693792.0696775,
+        "linear_shapley_mortality_risk_allocation": 769602264.7504039,
+        "linear_shapley_total_allocation": 1084296056.8200812
+      },
+      {
+        "number": 23,
+        "feature": "Emergency-system compatibility",
+        "linear_shapley_resource_allocation": 273661222.97872657,
+        "linear_shapley_mortality_risk_allocation": 690574828.3332981,
+        "linear_shapley_total_allocation": 964236051.3120246
+      }
+    ],
+    "systems": [
+      {
+        "system": "911/PSAP",
+        "potential_variable_public_expenditure_avoided": 14660407.836730937,
+        "capacity_value": 11868939.264098398,
+        "combined_public_resource": 26529347.100829333
+      },
+      {
+        "system": "EMS",
+        "potential_variable_public_expenditure_avoided": 41778571.16422502,
+        "capacity_value": 10609923.410361253,
+        "combined_public_resource": 52388494.57458627
+      },
+      {
+        "system": "fire",
+        "potential_variable_public_expenditure_avoided": 6257125.987020186,
+        "capacity_value": 3074473.076517857,
+        "combined_public_resource": 9331599.063538043
+      },
+      {
+        "system": "police",
+        "potential_variable_public_expenditure_avoided": 9444251.86986841,
+        "capacity_value": 4273199.062594163,
+        "combined_public_resource": 13717450.932462573
+      },
+      {
+        "system": "behavioral health",
+        "potential_variable_public_expenditure_avoided": 4744955.959798583,
+        "capacity_value": 1556561.7726747443,
+        "combined_public_resource": 6301517.732473327
+      },
+      {
+        "system": "Medicare",
+        "potential_variable_public_expenditure_avoided": 82451904.14627312,
+        "capacity_value": 14316156.44703663,
+        "combined_public_resource": 96768060.59330975
+      },
+      {
+        "system": "Medicaid",
+        "potential_variable_public_expenditure_avoided": 61767893.67989923,
+        "capacity_value": 12668186.054893795,
+        "combined_public_resource": 74436079.73479302
+      },
+      {
+        "system": "public hospitals",
+        "potential_variable_public_expenditure_avoided": 84147105.96799764,
+        "capacity_value": 15712903.026302578,
+        "combined_public_resource": 99860008.99430022
+      },
+      {
+        "system": "long-term care/disability",
+        "potential_variable_public_expenditure_avoided": 60462581.9034839,
+        "capacity_value": 8709547.088310624,
+        "combined_public_resource": 69172128.99179453
+      },
+      {
+        "system": "other public",
+        "potential_variable_public_expenditure_avoided": 21282119.49215342,
+        "capacity_value": 4128320.9953941377,
+        "combined_public_resource": 25410440.487547558
+      }
+    ],
+    "families": [
+      {
+        "family": "behavioral health/suicide",
+        "resource_value": 151049583.9916311,
+        "mortality_risk_value": 592661641.3152508,
+        "total_value": 743711225.3068819
+      },
+      {
+        "family": "cardiac arrest",
+        "resource_value": 343140628.1002917,
+        "mortality_risk_value": 1211982332.482417,
+        "total_value": 1555122960.5827088
+      },
+      {
+        "family": "cardiovascular",
+        "resource_value": 152793060.1447171,
+        "mortality_risk_value": 343609853.5347995,
+        "total_value": 496402913.6795166
+      },
+      {
+        "family": "cardiovascular/cardiac arrest",
+        "resource_value": 14739016.912669592,
+        "mortality_risk_value": 78343264.67801853,
+        "total_value": 93082281.59068811
+      },
+      {
+        "family": "cardiovascular/stroke",
+        "resource_value": 73318714.39199626,
+        "mortality_risk_value": 113547004.03945076,
+        "total_value": 186865718.43144703
+      },
+      {
+        "family": "caregiver crisis",
+        "resource_value": 2960595.084339053,
+        "mortality_risk_value": 1784961.9525525493,
+        "total_value": 4745557.036891602
+      },
+      {
+        "family": "chronic/medication access",
+        "resource_value": 5921190.168678106,
+        "mortality_risk_value": 3569923.9051050986,
+        "total_value": 9491114.073783204
+      },
+      {
+        "family": "endocrine/metabolic",
+        "resource_value": 12823798.115892995,
+        "mortality_risk_value": 14106243.28546764,
+        "total_value": 26930041.401360635
+      },
+      {
+        "family": "environmental exposure",
+        "resource_value": 5921190.168678106,
+        "mortality_risk_value": 3569923.9051050986,
+        "total_value": 9491114.073783204
+      },
+      {
+        "family": "falls/TBI/hemorrhage",
+        "resource_value": 38471394.34767898,
+        "mortality_risk_value": 42318729.85640292,
+        "total_value": 80790124.2040819
+      },
+      {
+        "family": "fire",
+        "resource_value": 46786929.16466747,
+        "mortality_risk_value": 157096940.39931357,
+        "total_value": 203883869.56398106
+      },
+      {
+        "family": "fire abroad",
+        "resource_value": 10690776.252627645,
+        "mortality_risk_value": 1986490.9241020605,
+        "total_value": 12677267.176729705
+      },
+      {
+        "family": "fire/public safety",
+        "resource_value": 41259219.10226378,
+        "mortality_risk_value": 78281395.82578167,
+        "total_value": 119540614.92804545
+      },
+      {
+        "family": "medical abroad",
+        "resource_value": 53453881.26313822,
+        "mortality_risk_value": 9932454.620510302,
+        "total_value": 63386335.88364852
+      },
+      {
+        "family": "medical/EMS",
+        "resource_value": 142892210.80078197,
+        "mortality_risk_value": 479978271.42029846,
+        "total_value": 622870482.2210804
+      },
+      {
+        "family": "neurologic/seizure",
+        "resource_value": 40329944.18406884,
+        "mortality_risk_value": 66293840.50265543,
+        "total_value": 106623784.68672428
+      },
+      {
+        "family": "obstetric/neonatal/pediatric",
+        "resource_value": 53332459.094464265,
+        "mortality_risk_value": 134400252.6398567,
+        "total_value": 187732711.73432097
+      },
+      {
+        "family": "other abroad",
+        "resource_value": 10690776.252627645,
+        "mortality_risk_value": 1986490.9241020605,
+        "total_value": 12677267.176729705
+      },
+      {
+        "family": "other severe illness",
+        "resource_value": 6411899.057946498,
+        "mortality_risk_value": 7053121.64273382,
+        "total_value": 13465020.700680317
+      },
+      {
+        "family": "other time-critical",
+        "resource_value": 68127448.3206794,
+        "mortality_risk_value": 161618051.61903146,
+        "total_value": 229745499.93971086
+      },
+      {
+        "family": "police/public safety",
+        "resource_value": 61353887.72300647,
+        "mortality_risk_value": 165045660.85148674,
+        "total_value": 226399548.57449323
+      },
+      {
+        "family": "police/public safety abroad",
+        "resource_value": 32072328.75788293,
+        "mortality_risk_value": 5959472.7723061815,
+        "total_value": 38031801.53018911
+      },
+      {
+        "family": "respiratory",
+        "resource_value": 160158374.73057854,
+        "mortality_risk_value": 358054413.80384195,
+        "total_value": 518212788.5344205
+      },
+      {
+        "family": "sepsis/infection",
+        "resource_value": 75346997.73993924,
+        "mortality_risk_value": 187523602.93247992,
+        "total_value": 262870600.67241916
+      },
+      {
+        "family": "social/resource emergencies",
+        "resource_value": 44408926.265085794,
+        "mortality_risk_value": 26774429.288288236,
+        "total_value": 71183355.55337402
+      },
+      {
+        "family": "stroke/neurologic",
+        "resource_value": 136803717.2849042,
+        "mortality_risk_value": 343809946.4527053,
+        "total_value": 480613663.7376095
+      },
+      {
+        "family": "toxicologic/endocrine",
+        "resource_value": 69451390.97487141,
+        "mortality_risk_value": 156186297.0612725,
+        "total_value": 225637688.0361439
+      },
+      {
+        "family": "toxicologic/substance use",
+        "resource_value": 16579735.503075255,
+        "mortality_risk_value": 65730820.74665977,
+        "total_value": 82310556.24973503
+      },
+      {
+        "family": "trauma/hemorrhage",
+        "resource_value": 159318967.6192531,
+        "mortality_risk_value": 360640777.365606,
+        "total_value": 519959744.9848591
+      }
+    ],
+    "local_correlation_sensitivity": {
+      "mortality": {
+        "correlation_excluding_vsl": 0.15408029941542278,
+        "correlation_including_vsl": 0.9738747821895558
+      },
+      "VSL": {
+        "correlation_excluding_vsl": 0.0030293070927321485,
+        "correlation_including_vsl": 0.11676138420997309
+      },
+      "medical resource cost": {
+        "correlation_excluding_vsl": 0.15172742385496257,
+        "correlation_including_vsl": 0.019598194699122173
+      },
+      "public operating cost": {
+        "correlation_excluding_vsl": 0.11351740255414917,
+        "correlation_including_vsl": 0.010919578110314356
+      },
+      "productivity": {
+        "correlation_excluding_vsl": 0.1722223105136109,
+        "correlation_including_vsl": 0.019780515447467673
+      },
+      "property": {
+        "correlation_excluding_vsl": 0.12568931411888015,
+        "correlation_including_vsl": 0.016339827061207516
+      },
+      "annualized deployment cost": {
+        "correlation_excluding_vsl": -0.5181391150040612,
+        "correlation_including_vsl": -0.06428648134954144
+      }
+    },
+    "morris_global_screening": [
+      {
+        "assumption": "deployment_cost",
+        "mu_star": 2104959972.3653731,
+        "sigma": 7.244682423323518e-07,
+        "normalized_mu_star": 0.3308798976693849
+      },
+      {
+        "assumption": "receiver_compatibility",
+        "mu_star": 1314851427.5630624,
+        "sigma": 626326386.495402,
+        "normalized_mu_star": 0.20668227021610774
+      },
+      {
+        "assumption": "deployment_reach",
+        "mu_star": 1271478305.1058443,
+        "sigma": 647988617.792483,
+        "normalized_mu_star": 0.1998644235545775
+      },
+      {
+        "assumption": "mortality_effect",
+        "mu_star": 660239342.4387567,
+        "sigma": 423816422.8393616,
+        "normalized_mu_star": 0.1037834110536322
+      },
+      {
+        "assumption": "vsl",
+        "mu_star": 634688990.0227209,
+        "sigma": 455251900.34148884,
+        "normalized_mu_star": 0.09976713611072455
+      },
+      {
+        "assumption": "productivity_value",
+        "mu_star": 258342768.45047086,
+        "sigma": 136024359.2335751,
+        "normalized_mu_star": 0.04060905191107356
+      },
+      {
+        "assumption": "medical_resource_cost",
+        "mu_star": 81103194.1485677,
+        "sigma": 42702995.257133394,
+        "normalized_mu_star": 0.012748658849974712
+      },
+      {
+        "assumption": "public_operating_cost",
+        "mu_star": 21279618.4082738,
+        "sigma": 11204286.754693426,
+        "normalized_mu_star": 0.0033449557491875372
+      },
+      {
+        "assumption": "property_value",
+        "mu_star": 14760393.109773794,
+        "sigma": 7771740.72583956,
+        "normalized_mu_star": 0.002320194885337283
+      }
+    ],
+    "fiscal_realization_sensitivity": {
+      "0": {
+        "mean": -31071.087121877845,
+        "p2.5": 0.0,
+        "p5": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "p97.5": 0.0,
+        "probability_positive": 0.0,
+        "probability_zero": 0.9986333333333334
+      },
+      "25": {
+        "mean": 96725926.18652119,
+        "p2.5": 22189906.271939617,
+        "p5": 29933790.384694215,
+        "p25": 60634266.7654568,
+        "median": 89004165.9468966,
+        "p75": 124469161.86291566,
+        "p95": 190266478.36090213,
+        "p97.5": 214984060.06657207,
+        "probability_positive": 0.9986333333333334,
+        "probability_zero": 0.0
+      },
+      "50": {
+        "mean": 193482923.46016428,
+        "p2.5": 44379812.54387923,
+        "p5": 59867580.76938843,
+        "p25": 121268533.5309136,
+        "median": 178008331.8937932,
+        "p75": 248938323.72583133,
+        "p95": 380532956.72180426,
+        "p97.5": 429968120.13314414,
+        "probability_positive": 0.9986333333333334,
+        "probability_zero": 0.0
+      },
+      "75": {
+        "mean": 290239920.7338074,
+        "p2.5": 66569718.81581885,
+        "p5": 89801371.15408264,
+        "p25": 181902800.2963704,
+        "median": 267012497.8406898,
+        "p75": 373407485.588747,
+        "p95": 570799435.0827065,
+        "p97.5": 644952180.1997162,
+        "probability_positive": 0.9986333333333334,
+        "probability_zero": 0.0
+      },
+      "100": {
+        "mean": 386996918.0074504,
+        "p2.5": 88759625.08775847,
+        "p5": 119735161.53877686,
+        "p25": 242537067.0618272,
+        "median": 356016663.7875864,
+        "p75": 497876647.45166266,
+        "p95": 761065913.4436085,
+        "p97.5": 859936240.2662883,
+        "probability_positive": 0.9986333333333334,
+        "probability_zero": 0.0
+      }
+    },
+    "stochastic_adoption": [
+      {
+        "year": 1,
+        "mean": 0.025499257863658215,
+        "p2.5": 0.0038166984412170268,
+        "p5": 0.005073259831978922,
+        "p25": 0.01204218180024673,
+        "median": 0.020967756639567688,
+        "p75": 0.0343187399474377,
+        "p95": 0.061622515818054474,
+        "p97.5": 0.07147895449442632,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 2,
+        "mean": 0.051999420973390754,
+        "p2.5": 0.00998138067083474,
+        "p5": 0.012928750243301328,
+        "p25": 0.02791477907385445,
+        "median": 0.045382229571969454,
+        "p75": 0.06969199456933765,
+        "p95": 0.11353776688165843,
+        "p97.5": 0.12865591327256326,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 3,
+        "mean": 0.10302931621069937,
+        "p2.5": 0.025460876212521927,
+        "p5": 0.03178450877347252,
+        "p25": 0.062295000348032405,
+        "median": 0.094679771906997,
+        "p75": 0.13597883554410514,
+        "p95": 0.20240663147174745,
+        "p97.5": 0.22383282866908547,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 4,
+        "mean": 0.19183700505766355,
+        "p2.5": 0.061652783162257065,
+        "p5": 0.07434901197377027,
+        "p25": 0.13036660048204843,
+        "median": 0.1836485539457946,
+        "p75": 0.24578086676158578,
+        "p95": 0.3368536365215423,
+        "p97.5": 0.3636688797937504,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 5,
+        "mean": 0.3219004269295569,
+        "p2.5": 0.13567041762363166,
+        "p5": 0.15771125200472277,
+        "p25": 0.24458189633179453,
+        "median": 0.3174811373758061,
+        "p75": 0.39561362215202,
+        "p95": 0.4992718319412996,
+        "p97.5": 0.5293550387181396,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 6,
+        "mean": 0.4720938682295156,
+        "p2.5": 0.259645117815994,
+        "p5": 0.2887566262852155,
+        "p25": 0.3945652217659186,
+        "median": 0.4744936429018255,
+        "p75": 0.5504399105547966,
+        "p95": 0.6486249984175697,
+        "p97.5": 0.6779447113237747,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 7,
+        "mean": 0.6052408024970621,
+        "p2.5": 0.40929950960637673,
+        "p5": 0.440718499743475,
+        "p25": 0.5407877926070812,
+        "median": 0.609891714017228,
+        "p75": 0.6733559306162129,
+        "p95": 0.7549273555666003,
+        "p97.5": 0.7787339625498,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 8,
+        "mean": 0.6980757800029088,
+        "p2.5": 0.5378933335021746,
+        "p5": 0.5648156862218322,
+        "p25": 0.6461752548664742,
+        "median": 0.7013374344367941,
+        "p75": 0.7531378286314028,
+        "p95": 0.8201816594208939,
+        "p97.5": 0.8385818825556948,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 9,
+        "mean": 0.7522462252743349,
+        "p2.5": 0.6163633232676337,
+        "p5": 0.638283895446702,
+        "p25": 0.7067447020674427,
+        "median": 0.7546643853736716,
+        "p75": 0.800614700366497,
+        "p95": 0.8578836327088395,
+        "p97.5": 0.8738845062188102,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      {
+        "year": 10,
+        "mean": 0.7806311707901532,
+        "p2.5": 0.6529653069480726,
+        "p5": 0.6730889794729216,
+        "p25": 0.7373800661602572,
+        "median": 0.7832398462503094,
+        "p75": 0.8266631796671013,
+        "p95": 0.8793228320989255,
+        "p97.5": 0.8939753840377506,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    ],
+    "named_adoption_scenarios": [
+      {
+        "scenario": "delayed",
+        "asymptote": 0.65,
+        "midpoint_year": 7.0,
+        "slope": 0.55,
+        "year_1": 0.023121273027213507,
+        "year_5": 0.16233093136317353,
+        "year_10": 0.5452791827752196
+      },
+      {
+        "scenario": "central",
+        "asymptote": 0.85,
+        "midpoint_year": 5.5,
+        "slope": 0.8,
+        "year_1": 0.022607444540335975,
+        "year_5": 0.3411154889044158,
+        "year_10": 0.827392555459664
+      },
+      {
+        "scenario": "accelerated",
+        "asymptote": 0.95,
+        "midpoint_year": 4.0,
+        "slope": 1.1,
+        "year_1": 0.033792629809004354,
+        "year_5": 0.7127471003153617,
+        "year_10": 0.9487094060470925
+      }
+    ],
+    "ten_year_projection": [
+      {
+        "year": 1,
+        "adoption_mean": 0.025499257863658215,
+        "adoption_p5": 0.005073259831978922,
+        "adoption_p95": 0.061622515818054474,
+        "gross_excluding_vsl_mean": 51808124.04516702,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 22828606.409143727,
+        "rollout_capital_outlay_mean": 68589620.97550379,
+        "net_excluding_vsl_mean": -607082120.4356623
+      },
+      {
+        "year": 2,
+        "adoption_mean": 0.051999420973390754,
+        "adoption_p5": 0.012928750243301328,
+        "adoption_p95": 0.11353776688165843,
+        "gross_excluding_vsl_mean": 105635173.63764401,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 46550167.80462565,
+        "rollout_capital_outlay_mean": 71269822.54826081,
+        "net_excluding_vsl_mean": -579656833.8114244
+      },
+      {
+        "year": 3,
+        "adoption_mean": 0.10302931621069937,
+        "adoption_p5": 0.03178450877347252,
+        "adoption_p95": 0.20240663147174745,
+        "gross_excluding_vsl_mean": 209278168.79159492,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 92226153.6672726,
+        "rollout_capital_outlay_mean": 137208612.47750953,
+        "net_excluding_vsl_mean": -587628614.449369
+      },
+      {
+        "year": 4,
+        "adoption_mean": 0.19183700505766355,
+        "adoption_p5": 0.07434901197377027,
+        "adoption_p95": 0.3368536365215423,
+        "gross_excluding_vsl_mean": 389640661.6377181,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 171711043.85360855,
+        "rollout_capital_outlay_mean": 238718310.12760013,
+        "net_excluding_vsl_mean": -588260709.4396724
+      },
+      {
+        "year": 5,
+        "adoption_mean": 0.3219004269295569,
+        "adoption_p5": 0.15771125200472277,
+        "adoption_p95": 0.4992718319412996,
+        "gross_excluding_vsl_mean": 653782813.8284484,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 288118808.31416696,
+        "rollout_capital_outlay_mean": 349504941.4102863,
+        "net_excluding_vsl_mean": -551312952.9921867
+      },
+      {
+        "year": 6,
+        "adoption_mean": 0.4720938682295156,
+        "adoption_p5": 0.2887566262852155,
+        "adoption_p95": 0.6486249984175697,
+        "gross_excluding_vsl_mean": 958779284.6953741,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 422559641.7628631,
+        "rollout_capital_outlay_mean": 403464406.15288174,
+        "net_excluding_vsl_mean": -434716780.3165527
+      },
+      {
+        "year": 7,
+        "adoption_mean": 0.6052408024970621,
+        "adoption_p5": 0.440718499743475,
+        "adoption_p95": 0.7549273555666003,
+        "gross_excluding_vsl_mean": 1229101234.3620565,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 541775459.4740493,
+        "rollout_capital_outlay_mean": 357576113.11038846,
+        "net_excluding_vsl_mean": -237722355.318563
+      },
+      {
+        "year": 8,
+        "adoption_mean": 0.6980757800029088,
+        "adoption_p5": 0.5648156862218322,
+        "adoption_p95": 0.8201816594208939,
+        "gross_excluding_vsl_mean": 1417524893.9232073,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 624923223.8164092,
+        "rollout_capital_outlay_mean": 249283563.53031865,
+        "net_excluding_vsl_mean": -24153910.519702394
+      },
+      {
+        "year": 9,
+        "adoption_mean": 0.7522462252743349,
+        "adoption_p5": 0.638283895446702,
+        "adoption_p95": 0.8578836327088395,
+        "gross_excluding_vsl_mean": 1527449535.6024735,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 673451031.5341362,
+        "rollout_capital_outlay_mean": 145462527.78848985,
+        "net_excluding_vsl_mean": 141063959.1836654
+      },
+      {
+        "year": 10,
+        "adoption_mean": 0.7806311707901532,
+        "adoption_p5": 0.6730889794729216,
+        "adoption_p95": 0.8793228320989255,
+        "gross_excluding_vsl_mean": 1585046302.3666713,
+        "fixed_recurring_cost_mean": 567472017.0961819,
+        "adoption_dependent_recurring_cost_mean": 698881279.6413902,
+        "rollout_capital_outlay_mean": 76228012.27143918,
+        "net_excluding_vsl_mean": 242464993.3576601
+      }
+    ],
+    "break_even_annual_cost": {
+      "fiscal_only_at_100_percent_realization": {
+        "mean": 386996918.0074504,
+        "p2.5": 88759625.08775847,
+        "p5": 119735161.53877686,
+        "p25": 242537067.0618272,
+        "median": 356016663.7875864,
+        "p75": 497876647.45166266,
+        "p95": 761065913.4436085,
+        "p97.5": 859936240.2662883,
+        "probability_positive": 0.9986333333333334,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2030609041.5184355,
+        "p2.5": 889079455.7706462,
+        "p5": 1012365301.2272949,
+        "p25": 1491182554.4282737,
+        "median": 1923720299.1050353,
+        "p75": 2454258715.983073,
+        "p95": 3410178414.5512896,
+        "p97.5": 3767923350.4071035,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "all_pathway_societal_including_vsl": {
+        "mean": 7204455652.266038,
+        "p2.5": 475766867.68188787,
+        "p5": 842543710.777031,
+        "p25": 2356520797.801558,
+        "median": 4945468635.763174,
+        "p75": 9703490040.884705,
+        "p95": 21105123528.895588,
+        "p97.5": 26144852868.297215,
+        "probability_positive": 0.9892,
+        "probability_zero": 0.0
+      }
+    }
+  },
+  "distribution_form_sensitivity": {
+    "pert": {
+      "direct_process_conservative_benchmark": {
+        "mean": 548634998.3326006,
+        "p2.5": 211326743.0287996,
+        "p5": 247504057.8851449,
+        "p25": 390499021.39276713,
+        "median": 518775158.8149271,
+        "p75": 674530489.7995474,
+        "p95": 950685478.9644102,
+        "p97.5": 1051787187.3563902,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2032630465.1551645,
+        "p2.5": 883836504.9552767,
+        "p5": 1007348484.9092737,
+        "p25": 1492306834.125122,
+        "median": 1923814454.8113594,
+        "p75": 2455311073.167216,
+        "p95": 3415872369.5625753,
+        "p97.5": 3788799950.301907,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7191973955.663026,
+        "p2.5": 479515828.992899,
+        "p5": 848501296.7179615,
+        "p25": 2349816185.967394,
+        "median": 4967372933.273201,
+        "p75": 9687329914.883448,
+        "p95": 21155795661.313904,
+        "p97.5": 26175422583.37212,
+        "probability_positive": 0.9895666666666667,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2101903597.03315,
+        "p2.5": 1303111103.2267344,
+        "p5": 1408612566.234768,
+        "p25": 1772558929.6971152,
+        "median": 2073234814.817226,
+        "p75": 2399181045.085001,
+        "p95": 2896987039.892951,
+        "p97.5": 3055634015.1943154,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -69273131.87798546,
+        "p2.5": -1602312041.3418448,
+        "p5": -1384760078.371691,
+        "p25": -671168669.5852766,
+        "median": -136218980.3279611,
+        "p75": 457092937.32276183,
+        "p95": 1481072854.547535,
+        "p97.5": 1843592240.6941001,
+        "probability_positive": 0.43566666666666665,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.0143837210269901,
+        "p2.5": 0.3872854081673137,
+        "p5": 0.4500855702449291,
+        "p25": 0.6972656410232133,
+        "median": 0.9337580292522166,
+        "p75": 1.2415267212145455,
+        "p95": 1.8608616201157653,
+        "p97.5": 2.1064518060792543,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "triangular": {
+      "direct_process_conservative_benchmark": {
+        "mean": 1132523816.6085186,
+        "p2.5": 389742042.0441821,
+        "p5": 462626032.9247144,
+        "p25": 763107591.1240946,
+        "median": 1055172987.3585775,
+        "p75": 1414472878.3634262,
+        "p95": 2080431294.8920827,
+        "p97.5": 2329209062.9932094,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 4546092849.354331,
+        "p2.5": 1699832509.571201,
+        "p5": 1979550739.2881503,
+        "p25": 3122056561.777999,
+        "median": 4233617931.3486757,
+        "p75": 5636024850.45706,
+        "p95": 8191380121.620944,
+        "p97.5": 9174920629.43795,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 14617837260.639668,
+        "p2.5": 957697859.8280629,
+        "p5": 1712959415.896391,
+        "p25": 4736293571.968917,
+        "median": 9542753585.549522,
+        "p75": 19040400007.03251,
+        "p95": 44806322080.42401,
+        "p97.5": 56724578837.3521,
+        "probability_positive": 0.9885666666666667,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2656654801.2527337,
+        "p2.5": 1469267803.6985598,
+        "p5": 1612969529.6387038,
+        "p25": 2148731781.330447,
+        "median": 2609474960.9799566,
+        "p75": 3119936246.7344904,
+        "p95": 3857519385.9686837,
+        "p97.5": 4081783768.0783706,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": 1889438048.1015973,
+        "p2.5": -1378049946.7986453,
+        "p5": -974288272.8071868,
+        "p25": 434155906.7520205,
+        "median": 1616536383.3568642,
+        "p75": 3067775242.321854,
+        "p95": 5661511951.793181,
+        "p97.5": 6646475064.095685,
+        "probability_positive": 0.8291166666666666,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.8354778095503061,
+        "p2.5": 0.5836753650410046,
+        "p5": 0.6918891869510017,
+        "p25": 1.1583098326642405,
+        "median": 1.6323337804274085,
+        "p75": 2.2904265925241845,
+        "p95": 3.653781850697084,
+        "p97.5": 4.2590778030990295,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "uniform": {
+      "direct_process_conservative_benchmark": {
+        "mean": 1600419010.9106352,
+        "p2.5": 364969505.7985406,
+        "p5": 466199196.6200712,
+        "p25": 956027556.6851169,
+        "median": 1458065898.3179357,
+        "p75": 2085157338.2963374,
+        "p95": 3230075732.5526266,
+        "p97.5": 3646036830.537391,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 6629976047.248219,
+        "p2.5": 1689904463.611261,
+        "p5": 2102495094.0347712,
+        "p25": 4068250667.418427,
+        "median": 6057933724.648068,
+        "p75": 8544714917.801117,
+        "p95": 13096810889.891853,
+        "p97.5": 14963393450.271536,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 21014123845.74694,
+        "p2.5": 843568162.1645751,
+        "p5": 1845333070.2019713,
+        "p25": 6010391073.734095,
+        "median": 12384327786.599165,
+        "p75": 26417556484.29393,
+        "p95": 69743919189.746,
+        "p97.5": 91168040016.78168,
+        "probability_positive": 0.9842833333333333,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 3047879419.9628687,
+        "p2.5": 1310176781.1611173,
+        "p5": 1515651888.4062207,
+        "p25": 2348644462.6873035,
+        "median": 3045536426.043499,
+        "p75": 3748854898.9611397,
+        "p95": 4581293622.628057,
+        "p97.5": 4795148293.204214,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": 3582096627.28535,
+        "p2.5": -1831110678.426842,
+        "p5": -1267333575.8693743,
+        "p25": 969796529.4749466,
+        "median": 3059780669.007039,
+        "p75": 5601566101.625559,
+        "p95": 10237624933.708675,
+        "p97.5": 12067548829.357315,
+        "probability_positive": 0.8536,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 2.4491799576443976,
+        "p2.5": 0.5114285592830683,
+        "p5": 0.6454357579012278,
+        "p25": 1.3064319921138305,
+        "median": 2.039579523856487,
+        "p75": 3.1010203905646057,
+        "p95": 5.624721658198518,
+        "p97.5": 6.859743062810496,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "logit_normal": {
+      "direct_process_conservative_benchmark": {
+        "mean": 511478902.22517717,
+        "p2.5": -4983303.90343104,
+        "p5": 39281090.095462814,
+        "p25": 201518230.45775056,
+        "median": 399273055.1496545,
+        "p75": 705428431.0671084,
+        "p95": 1367731558.0520136,
+        "p97.5": 1646299569.8436778,
+        "probability_positive": 0.9730666666666666,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2020083543.4190361,
+        "p2.5": 318198237.24857193,
+        "p5": 418912477.1187607,
+        "p25": 937511216.0693687,
+        "median": 1602562694.3437302,
+        "p75": 2648770463.2493052,
+        "p95": 5032620410.408936,
+        "p97.5": 6097928343.256068,
+        "probability_positive": 0.9997333333333334,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 10031205904.913185,
+        "p2.5": -1116897711.8775575,
+        "p5": -32502356.43563954,
+        "p25": 1488031847.879133,
+        "median": 3822120293.9182367,
+        "p75": 10422723243.816586,
+        "p95": 41983372119.147156,
+        "p97.5": 61653414315.88977,
+        "probability_positive": 0.9482166666666667,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2024141039.5611374,
+        "p2.5": 668993924.6445581,
+        "p5": 807918621.597305,
+        "p25": 1407148261.4855046,
+        "median": 1952022819.9237938,
+        "p75": 2565092999.712521,
+        "p95": 3488751412.912163,
+        "p97.5": 3778953432.9332933,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -4057496.142101319,
+        "p2.5": -2670977735.7943115,
+        "p5": -2321448783.556708,
+        "p25": -1147784647.6829984,
+        "median": -271980452.00976896,
+        "p75": 835137510.5248998,
+        "p95": 3240433239.0767922,
+        "p97.5": 4253941816.6707683,
+        "probability_positive": 0.42636666666666667,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.212284238663036,
+        "p2.5": 0.14267761712896196,
+        "p5": 0.1908485395401083,
+        "p25": 0.46538236014686835,
+        "median": 0.847535322184575,
+        "p75": 1.5287667400017142,
+        "p95": 3.4374130213940712,
+        "p97.5": 4.4207093007504925,
+        "probability_positive": 0.9997333333333334,
+        "probability_zero": 0.0
+      }
+    }
+  },
+  "moment_matched_distribution_sensitivity": {
+    "triangular_moment_matched": {
+      "direct_process_conservative_benchmark": {
+        "mean": 549284632.264763,
+        "p2.5": 214200995.93924507,
+        "p5": 249566157.36683524,
+        "p25": 390177698.4784185,
+        "median": 518331132.9402355,
+        "p75": 676439847.6605136,
+        "p95": 954228148.0181084,
+        "p97.5": 1053122383.3034849,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2034771615.3628182,
+        "p2.5": 895662964.898992,
+        "p5": 1013521865.3985436,
+        "p25": 1490237193.8220897,
+        "median": 1924403095.9394255,
+        "p75": 2463509015.814627,
+        "p95": 3435126029.015823,
+        "p97.5": 3785936927.638817,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7202272431.924725,
+        "p2.5": 487112515.37541837,
+        "p5": 850469598.7639169,
+        "p25": 2353470463.3587475,
+        "median": 4941627545.157577,
+        "p75": 9701162971.966993,
+        "p95": 21222172969.126293,
+        "p97.5": 26333088379.66576,
+        "probability_positive": 0.9891,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2105698762.273141,
+        "p2.5": 1314974607.5406513,
+        "p5": 1412216159.7307377,
+        "p25": 1772823724.2247736,
+        "median": 2077388932.9979663,
+        "p75": 2410016890.4989395,
+        "p95": 2896642290.213326,
+        "p97.5": 3041804685.3405156,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -70927146.91032265,
+        "p2.5": -1598099867.6981418,
+        "p5": -1382120603.210675,
+        "p25": -677749270.4472442,
+        "median": -141199889.5929768,
+        "p75": 459514812.21074206,
+        "p95": 1486952971.811642,
+        "p97.5": 1860112195.036929,
+        "probability_positive": 0.43355,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.0137768709885677,
+        "p2.5": 0.3914934384422137,
+        "p5": 0.44895536687782944,
+        "p25": 0.6946498002329097,
+        "median": 0.9309208230879337,
+        "p75": 1.2408255460109827,
+        "p95": 1.8608972465304685,
+        "p97.5": 2.112684319948132,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "uniform_moment_matched": {
+      "direct_process_conservative_benchmark": {
+        "mean": 548255109.4641682,
+        "p2.5": 202510430.1499973,
+        "p5": 240907504.46774247,
+        "p25": 385820707.0744522,
+        "median": 522436234.1055752,
+        "p75": 683004428.3070962,
+        "p95": 947385351.7822356,
+        "p97.5": 1035550525.3131847,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2034970839.5612,
+        "p2.5": 858717066.6144471,
+        "p5": 979420314.1604328,
+        "p25": 1475731092.4648128,
+        "median": 1945077738.2331367,
+        "p75": 2499881142.0676036,
+        "p95": 3406987507.3392158,
+        "p97.5": 3723079307.045978,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7197160936.325937,
+        "p2.5": 424656010.86928016,
+        "p5": 810104213.8139391,
+        "p25": 2308483264.4661226,
+        "median": 4867371807.226302,
+        "p75": 9783300296.976639,
+        "p95": 21380244435.93099,
+        "p97.5": 26296016448.029797,
+        "probability_positive": 0.9882333333333333,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2105698762.273141,
+        "p2.5": 1261918807.2193303,
+        "p5": 1365188649.0564046,
+        "p25": 1768346451.8845015,
+        "median": 2106289141.642697,
+        "p75": 2443178760.295655,
+        "p95": 2848515909.82518,
+        "p97.5": 2951941869.6963463,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -70727922.71194112,
+        "p2.5": -1602425968.3097355,
+        "p5": -1400082153.5372505,
+        "p25": -697047117.3970139,
+        "median": -132852258.45232487,
+        "p75": 487759062.87237954,
+        "p95": 1463051423.8372672,
+        "p97.5": 1814976276.6935127,
+        "probability_positive": 0.4406,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.0170867453239822,
+        "p2.5": 0.375323976118323,
+        "p5": 0.43735916810088343,
+        "p25": 0.6862349439307933,
+        "median": 0.9344572132774425,
+        "p75": 1.2553133915814227,
+        "p95": 1.8803373175730196,
+        "p97.5": 2.134580422061222,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "logit_normal_moment_matched": {
+      "direct_process_conservative_benchmark": {
+        "mean": 550318456.102586,
+        "p2.5": 235983797.84022087,
+        "p5": 267653669.04861102,
+        "p25": 391901459.5390126,
+        "median": 512850391.2020978,
+        "p75": 671434129.3551084,
+        "p95": 959604471.9691542,
+        "p97.5": 1067569965.7760285,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2034810228.9579046,
+        "p2.5": 984485719.0619401,
+        "p5": 1087845241.5134315,
+        "p25": 1492331231.485641,
+        "median": 1898267818.235844,
+        "p75": 2436621743.6537623,
+        "p95": 3446833103.514888,
+        "p97.5": 3828353822.6099124,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7207348907.223849,
+        "p2.5": 492332486.3485181,
+        "p5": 889142121.4826658,
+        "p25": 2411413447.8715687,
+        "median": 5045221384.388491,
+        "p75": 9617479063.655912,
+        "p95": 21076695068.61807,
+        "p97.5": 26318787047.858852,
+        "probability_positive": 0.9893833333333333,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2105698762.2731407,
+        "p2.5": 1357400932.3433406,
+        "p5": 1431776162.691676,
+        "p25": 1763632741.2994542,
+        "median": 2065033013.6129973,
+        "p75": 2405536977.3547273,
+        "p95": 2912610940.0522933,
+        "p97.5": 3077929670.497095,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -70888533.3152361,
+        "p2.5": -1561805300.6005728,
+        "p5": -1349899428.3726907,
+        "p25": -669591302.6680448,
+        "median": -151316980.66461813,
+        "p75": 436799138.2709694,
+        "p95": 1487780513.7331336,
+        "p97.5": 1883770938.6501126,
+        "probability_positive": 0.4281,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.012658731287402,
+        "p2.5": 0.42344885889743067,
+        "p5": 0.4750790896236938,
+        "p25": 0.697154025797612,
+        "median": 0.9250239131883949,
+        "p75": 1.232291847646072,
+        "p95": 1.8505379780848166,
+        "p97.5": 2.0975522752034372,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    }
+  },
+  "dependence_sensitivity": {
+    "gaussian_rho_0.0": {
+      "direct_process_conservative_benchmark": {
+        "mean": 548527313.0094538,
+        "p2.5": 263681824.2937743,
+        "p5": 299663012.9957804,
+        "p25": 426409165.58166474,
+        "median": 530776971.5238026,
+        "p75": 650554513.7246213,
+        "p95": 859730155.8868169,
+        "p97.5": 936009028.0410653,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2035032287.9198728,
+        "p2.5": 1149812792.8404582,
+        "p5": 1255277280.0761755,
+        "p25": 1634445437.6788392,
+        "median": 1960105271.8925588,
+        "p75": 2356602816.653012,
+        "p95": 3066001943.627257,
+        "p97.5": 3341480287.9392376,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7199724941.261473,
+        "p2.5": 1349711439.793429,
+        "p5": 1768674764.1268225,
+        "p25": 3823211442.206501,
+        "median": 6113268765.960085,
+        "p75": 9427625312.046745,
+        "p95": 16308873541.349981,
+        "p97.5": 19165925199.524437,
+        "probability_positive": 0.99865,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2107124329.4299784,
+        "p2.5": 1312077371.3346226,
+        "p5": 1408712810.480084,
+        "p25": 1777458222.4376426,
+        "median": 2080681172.5116901,
+        "p75": 2407251505.324451,
+        "p95": 2896288079.684265,
+        "p97.5": 3056666151.396096,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -72092041.5101059,
+        "p2.5": -1412405284.4700153,
+        "p5": -1206875243.4646225,
+        "p25": -564661142.9548161,
+        "median": -103726634.11674166,
+        "p75": 385879791.92963946,
+        "p95": 1164991428.9336724,
+        "p97.5": 1453247810.1130679,
+        "probability_positive": 0.4413666666666667,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.0134100387329152,
+        "p2.5": 0.4843926192936245,
+        "p5": 0.5380271523662148,
+        "p25": 0.7506015013859181,
+        "median": 0.9494900154085759,
+        "p75": 1.2061809099944978,
+        "p95": 1.705186640334422,
+        "p97.5": 1.9095169226704365,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "gaussian_rho_0.5": {
+      "direct_process_conservative_benchmark": {
+        "mean": 550007623.213944,
+        "p2.5": 212655596.22141013,
+        "p5": 248165546.68202743,
+        "p25": 390551733.72398746,
+        "median": 519295870.4533054,
+        "p75": 676920004.3156705,
+        "p95": 956238109.1062859,
+        "p97.5": 1060388066.0804058,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2033228370.4097538,
+        "p2.5": 891558488.3690057,
+        "p5": 1012301219.9426278,
+        "p25": 1491383234.385994,
+        "median": 1925153463.8960671,
+        "p75": 2457255733.3809757,
+        "p95": 3419947886.182047,
+        "p97.5": 3801899467.180004,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7204233998.457873,
+        "p2.5": 473828482.5507613,
+        "p5": 849665513.8420051,
+        "p25": 2355540910.4334116,
+        "median": 4956524252.26543,
+        "p75": 9711100147.426588,
+        "p95": 21240713766.316986,
+        "p97.5": 26375608692.794506,
+        "probability_positive": 0.9894,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2107742675.1665123,
+        "p2.5": 1310512149.6288366,
+        "p5": 1415963939.9946854,
+        "p25": 1779793528.6984165,
+        "median": 2078999551.4628057,
+        "p75": 2407129355.898527,
+        "p95": 2894974033.4569964,
+        "p97.5": 3053995708.5173616,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -74514304.75675827,
+        "p2.5": -1599221008.2498367,
+        "p5": -1387539944.9577425,
+        "p25": -678301609.3858097,
+        "median": -141280369.13133848,
+        "p75": 454092287.0196916,
+        "p95": 1465356748.7541182,
+        "p97.5": 1846603532.9897056,
+        "probability_positive": 0.43335,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.0114558726241736,
+        "p2.5": 0.3920849297422097,
+        "p5": 0.4487775495482586,
+        "p25": 0.6929047663780376,
+        "median": 0.9304605822860534,
+        "p75": 1.2404045217404815,
+        "p95": 1.844975535036447,
+        "p97.5": 2.107574573184365,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "gaussian_rho_0.8": {
+      "direct_process_conservative_benchmark": {
+        "mean": 548629127.9494113,
+        "p2.5": 184460739.9486986,
+        "p5": 221106017.10132495,
+        "p25": 371973357.89281356,
+        "median": 512816882.75539446,
+        "p75": 686473115.6760852,
+        "p95": 998326097.5150778,
+        "p97.5": 1115648635.6301868,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2035709359.161056,
+        "p2.5": 773442474.0441868,
+        "p5": 901140076.4778265,
+        "p25": 1419289624.713644,
+        "median": 1905528218.9495907,
+        "p75": 2512672350.361747,
+        "p95": 3606583514.289981,
+        "p97.5": 4038429650.413794,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7224687774.153371,
+        "p2.5": 74928434.24782798,
+        "p5": 511300530.800764,
+        "p25": 1810506883.0808768,
+        "median": 3971264173.5764313,
+        "p75": 9592521311.071089,
+        "p95": 24541282175.52716,
+        "p97.5": 31120429206.921776,
+        "probability_positive": 0.97795,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2104932492.051946,
+        "p2.5": 1307296644.9834707,
+        "p5": 1412712947.271928,
+        "p25": 1779667799.2384233,
+        "median": 2077538564.5698936,
+        "p75": 2402999434.7975106,
+        "p95": 2888578659.7449207,
+        "p97.5": 3051623767.5437584,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -69223132.89088963,
+        "p2.5": -1695546117.6511805,
+        "p5": -1476548843.719332,
+        "p25": -736494019.4659152,
+        "median": -166272372.18540585,
+        "p75": 503666279.2751031,
+        "p95": 1643613695.1920035,
+        "p97.5": 2083185997.0560236,
+        "probability_positive": 0.4317,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.014719990833089,
+        "p2.5": 0.3456890911639231,
+        "p5": 0.40345752142971014,
+        "p25": 0.6646020126450947,
+        "median": 0.9181980560455709,
+        "p75": 1.263621480958475,
+        "p95": 1.9407397228374064,
+        "p97.5": 2.2113965119695207,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    },
+    "student_t_rho_0.5": {
+      "direct_process_conservative_benchmark": {
+        "mean": 548630033.3900948,
+        "p2.5": 209792348.25159255,
+        "p5": 247175587.37608224,
+        "p25": 392032838.6566037,
+        "median": 519306454.79225874,
+        "p75": 673917067.7851001,
+        "p95": 952499634.9094242,
+        "p97.5": 1056039736.4953717,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "mortality_neutral_societal": {
+        "mean": 2033549682.137925,
+        "p2.5": 888148320.9306402,
+        "p5": 1012428638.7635726,
+        "p25": 1496172215.5708072,
+        "median": 1926566885.293182,
+        "p75": 2445258276.7186522,
+        "p95": 3440643049.4821486,
+        "p97.5": 3806610064.055108,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "societal_including_vsl": {
+        "mean": 7225674046.025021,
+        "p2.5": 500033596.5366476,
+        "p5": 865889604.1097673,
+        "p25": 2367607739.4318542,
+        "median": 4956034224.210234,
+        "p75": 9725456109.0109,
+        "p95": 21089260747.86115,
+        "p97.5": 26221345654.965145,
+        "probability_positive": 0.9903,
+        "probability_zero": 0.0
+      },
+      "annualized_deployment_cost": {
+        "mean": 2108419034.064422,
+        "p2.5": 1309593887.8209689,
+        "p5": 1411876910.6956725,
+        "p25": 1785920099.0474887,
+        "median": 2081659504.4378014,
+        "p75": 2404332067.4193487,
+        "p95": 2889021778.0532675,
+        "p97.5": 3045259878.558162,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      },
+      "net_benefit_excluding_vsl": {
+        "mean": -74869351.92649704,
+        "p2.5": -1592603538.0525196,
+        "p5": -1376785545.7797232,
+        "p25": -675319342.7574108,
+        "median": -144141860.1391852,
+        "p75": 447361425.2233258,
+        "p95": 1479812920.6677568,
+        "p97.5": 1868539087.245075,
+        "probability_positive": 0.4301,
+        "probability_zero": 0.0
+      },
+      "benefit_cost_ratio_excluding_vsl": {
+        "mean": 1.0108139541971648,
+        "p2.5": 0.3898834961374949,
+        "p5": 0.4509856184971368,
+        "p25": 0.6940128826551973,
+        "median": 0.9291704608079008,
+        "p75": 1.2360841529045143,
+        "p95": 1.8526201032115497,
+        "p97.5": 2.0996188705696737,
+        "probability_positive": 1.0,
+        "probability_zero": 0.0
+      }
+    }
+  }
+}

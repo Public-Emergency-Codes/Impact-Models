@@ -1,0 +1,445 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,tabularx,array}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip}
+\setlength{\emergencystretch}{3em}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\title{Technical Review of the Public Emergency Codes\\
+Mortality and Economic Manuscripts}
+\author{}
+\date{August 8, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The two manuscripts are unusually explicit about the distinction between an
+identified PEC effect and an assumption-conditional planning calculation.  The
+headline mortality calculations, modal values, and Monte Carlo summaries were
+rerun from the archived scripts and reproduced numerically.  The key quoted
+values from the Nguyen bystander-CPR study, the randomized video-dispatch
+trial, the 2026 HHS VSL/VQALY guidance, and the OMB A-94 reinstatement were also
+spot-checked against the cited primary sources and were quoted accurately.
+
+Major revision is nevertheless needed before the economic results can be
+described as enforcing the paper's claimed accounting and incident-level
+safeguards.  Several safeguards are present only as prose or as algebraic
+identities that are true by construction; the executable model does not
+implement them.  The mortality paper is more internally coherent, but its
+annual-count implementation does not preserve the claimed cross-pathway
+exclusivity, and its CPR time conversion should be labeled as a stronger
+approximation than the current wording suggests.
+
+\section*{Major technical findings}
+
+\subsection*{1. Definite error: the fiscal/capacity ``partition'' is tautological in code}
+
+\paragraph{Location.}
+\texttt{Main\_economic.tex}.\\
+``Economic perspectives and definitions,''
+Equation~\eqref{eq:publicpartition-review} below, and
+\path{pec_economic_simulation.py} in the per-pathway public-resource block.
+
+The manuscript states
+\begin{equation}
+G_{ir}=F_{ir}+C^{\mathrm{res}}_{ir},\qquad
+C^{\mathrm{res}}_{ir}=G_{ir}-F_{ir},
+\tag{as printed in the manuscript}
+\label{eq:publicpartition-review}
+\end{equation}
+and says that the code enforces a mutually exclusive allocation of a common
+gross public resource.  The code instead samples public fiscal value and
+capacity value independently, defines gross value as their sum, and then
+subtracts fiscal value to recover the original capacity draw.  The subsequent
+assertion verifies only the identity
+\(F+C=(F+C)\); it does not test whether the two sampled components value the
+same dispatcher hour, responder hour, transport, bed-hour, or medical resource
+twice.
+
+\paragraph{Why it matters.}
+The mature public-resource headline of approximately \(\$1.173\) billion and
+its split into \(\$943\) million fiscal plus \(\$230\) million capacity are
+presented as non-overlapping.  The current implementation does not establish
+that property, so the split and combined total may contain conceptual overlap.
+
+\paragraph{Suggested fix.}
+Model one gross resource quantity from operational primitives and allocate it
+with an explicit share, for example
+\[
+F_{ir}=\alpha_{ir}G_{ir},\qquad
+C^{\mathrm{res}}_{ir}=(1-\alpha_{ir})G_{ir},\qquad 0\leq\alpha_{ir}\leq1,
+\]
+or calculate fiscal and residual capacity from a common unit ledger.  Assert
+the identity against that independently calculated gross quantity, then rerun
+all public-system, pathway, feature, and headline tables.
+
+\subsection*{2. Definite implementation mismatch: the economic simulation is not incident-level paired}
+
+\paragraph{Location.}
+\emph{Main\_economic.tex}, ``Incident-level paired counterfactual,'' especially
+the sentence ``Both costs are calculated for the same simulated incident
+severity, payer, condition, and underlying risk,'' and
+\path{pec_economic_simulation.py}.
+
+\paragraph{Problem.}
+The executable model does not simulate incident-level
+\(C_{ip}^{(0)}\) and \(C_{ip}^{(1)}\), severity, payer, or condition.  It samples
+one pathway-level PERT distribution for an already-net per-changed-incident
+delta and multiplies it by an expected affected count.  Payer/system and
+condition-family weights are applied later as fixed reporting allocations.
+The model therefore implements an aggregate pathway scenario, not the paired
+micro-simulation described in the methods.
+
+The same structure also leaves cross-pathway overlap unresolved for economic
+outcomes.  The acute pathways are valued separately against overlapping
+opportunity populations, and the scalar \(w_j\) attenuation does not allocate
+an actual incident to a unique economic pathway.  Feature weights merely
+redistribute value after pathway totals have already been added.
+
+\paragraph{Why it matters.}
+The stated pairing is offered as protection against mismatched severity and
+double counting.  Because that pairing is absent, the methods overstate the
+model's granularity, and the uncertainty analysis does not include the claimed
+incident-level variation in payer, condition, and severity.
+
+\paragraph{Suggested fix.}
+Choose one of two defensible approaches.  Either (i) revise the paper throughout
+to call the executable model an aggregate pathway-level expected-delta model
+and remove claims about simulated incident pairing, or (ii) implement a true
+paired incident model with shared incident attributes, explicit baseline/PEC
+resource ledgers, and one cross-pathway allocation or joint-outcome mechanism.
+In either case, define exactly what \(w_j\) removes and show that the remaining
+pathway totals are non-overlapping.
+
+\subsection*{3. Definite algorithmic mismatch: acute annual counts are not mutually exclusive across pathways}
+
+\paragraph{Location.}
+\emph{main.tex}, ``Mature full-implementation model'' and ``Mature
+probabilistic results,'' especially Equations~\((16)\) and \((18)\) in the
+manuscript; \path{pec_full_potential_simulation.py}, the
+\texttt{outcome\_noise} branch.
+
+\paragraph{Problem.}
+The code normalizes the five acute relevance shares so that their sum does not
+exceed one, which is correct for expected values.  It then draws a separate
+binomial affected count for each pathway from the same
+\(36.367261\)-million incident denominator.  Independent binomial draws do not
+make the pathway memberships mutually exclusive: the same conceptual incident
+can appear in more than one pathway's count realization.  The within-pathway
+benefit/harm/none draw is multinomial-equivalent, but the cross-pathway category
+assignment is not.
+
+\paragraph{Why it matters.}
+This contradicts the statements that ``one mortality outcome is allocated once
+across all five dominant mechanisms'' and that the five mechanisms are
+mutually exclusive.  The numerical effect is currently small because parameter
+uncertainty dominates annual count noise, but the predictive variance and
+cross-pathway covariance are not generated by the claimed model.
+
+\paragraph{Suggested fix.}
+For each parameter draw, first draw one multinomial allocation across the five
+acute categories plus an unaffected remainder.  Apply pathway-specific success
+and benefit/harm/none outcomes within those allocated counts.  Use a separate
+random-number stream for annual count noise so that enabling or disabling count
+noise cannot alter the underlying parameter draws.
+
+\subsection*{4. Definite implementation mismatch: the printed fire-loss equation is not executable}
+
+\paragraph{Location.}
+\emph{Main\_economic.tex}, ``Location and responder access,'' Equation~\((9)\)
+and the statement that the property result is subject to its incident-level
+cap; Appendix ``Pathway economic deltas''; and
+\path{pec_economic_simulation.py}.
+
+\paragraph{Problem.}
+The manuscript defines
+\[
+B_{\mathrm{fire}}=N_fL_f\left[1-\exp(-\eta\Delta t)\right],
+\]
+but the code contains no corresponding fire count \(N_f\), baseline per-fire
+loss \(L_f\), time recovery \(\Delta t\), damage-growth parameter \(\eta\),
+exponential calculation, or cap against the national fire-loss base.  Instead,
+it samples a generic property delta for every affected location/access event
+(and separate deltas for a few other pathways) and multiplies by a common
+property driver.
+
+\paragraph{Why it matters.}
+The \(\$108\)-million property headline is not generated by the causal/time
+formula used to justify it.  Readers cannot determine how many modeled events
+are fires, how the cited national loss totals constrain the output, or whether
+the same property benefit is being applied to nonfire location events.
+
+\paragraph{Suggested fix.}
+Either implement Equation~\((9)\) with an explicit fire-event subset and an
+executable national-loss cap, or delete the equation and describe the actual
+per-event PERT model.  Report the fire-event fraction, time-saved distribution,
+elasticity prior, and cap diagnostic in the machine-readable output.
+
+\subsection*{5. Definite reproducibility defect: seeds and companion mortality streams are inconsistent}
+
+\paragraph{Location.}
+\emph{Main\_economic.tex}, ``Monte Carlo simulation,'' ``Mortality-risk
+valuation,'' and ``Reproducible files''; \path{pec_economic_simulation.py};
+\path{pec_full_potential_simulation.py}.
+
+\paragraph{Problem.}
+The economic paper says that each scenario uses random seed \(20260808\).  The
+script actually calls the current scenario with offset 101 and the mature
+scenario with offset 202, producing economic seeds \(20260909\) and
+\(20261010\).  The JSON records only the base seed, not these actual scenario
+seeds.
+
+The economic model also regenerates mature domestic mortality with
+\texttt{outcome\_noise=False}, whereas the mortality paper's primary run uses
+\texttt{outcome\_noise=True}.  Because annual count draws are interleaved with
+later pathway parameter draws in one random-number stream, the parameter arrays
+change when outcome noise is disabled.  Consequently, the economic paper's
+domestic mature parameter median is \(3536.826\) lives (reported as
+\(3{,}537\)), while the mortality paper's parameter median is \(3534.913\)
+(reported as \(3{,}535\)).  This is not the identical companion stream claimed
+in the reproducibility discussion.
+
+\paragraph{Why it matters.}
+Exact seeds and identical imported draws are load-bearing reproducibility
+claims.  The discrepancy is small numerically but shows that the random-number
+architecture couples parameter uncertainty to the optional predictive-noise
+calculation.
+
+\paragraph{Suggested fix.}
+Record the actual current and mature economic seeds in JSON and manuscript
+text.  Split parameter, pathway, and annual-count random streams using named
+\texttt{SeedSequence} children.  Prefer importing archived companion path
+arrays or a parameter-only stream whose output is invariant to whether count
+noise is requested.  Reconcile all \(3{,}535\)/\(3{,}537\) and related Tier-C
+figures after the fix.
+
+\subsection*{6. Definite numerical inconsistency: the ten-year table is stale}
+
+\paragraph{Location.}
+\emph{Main\_economic.tex}, the ten-year projection table, the
+executive-summary row for ten-year present value, and
+\path{pec_economic_results.json}.
+
+The executive summary correctly reports the mature VSL-inclusive \(7\%\)
+present value as \(\$237.132\) billion, but the ten-year table reports
+\(\$237.063\) billion.  The rerun gives the following societal totals:
+
+\begin{center}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Measure & Excluding VSL & Including VSL\\
+\midrule
+Cumulative constant 2026 dollars & \(\$69.993\)b & \(\$374.916\)b\\
+Cumulative nominal dollars & \(\$81.223\)b & \(\$435.072\)b\\
+Present value, \(1.6\%\) real & \(\$62.716\)b & \(\$335.936\)b\\
+Present value, \(3\%\) real & \(\$57.116\)b & \(\$305.941\)b\\
+Present value, \(7\%\) real & \(\$44.270\)b & \(\$237.132\)b\\
+\bottomrule
+\end{tabular}
+
+\emph{Values reproduced from the current executable output; these should
+replace the stale societal columns in the manuscript table.}
+\end{center}
+
+\paragraph{Why it matters.}
+The discrepancy is small but directly contradicts the claimed reproducible
+link between the paper and output JSON.
+
+\paragraph{Suggested fix.}
+Generate the ten-year table from JSON rather than copying rounded values by
+hand, and add a regression assertion for every printed projection total.
+
+\subsection*{7. Definite archive defect: the claimed SHA-256 manifest is absent}
+
+\paragraph{Location.}
+Both manuscripts' reproducibility sections and
+\path{source-materials/README.md} refer to
+\path{reproducibility-manifest.sha256} at project root.
+
+\paragraph{Problem.}
+That file is not present in the supplied archive.  The manuscripts therefore
+make a false archive-completeness claim even though the main scripts, JSON, and
+CSV outputs are present and rerunnable.
+
+\paragraph{Why it matters.}
+The missing manifest prevents the promised verification that the manuscripts,
+inputs, scripts, outputs, and source transcriptions form one exact archived
+release.
+
+\paragraph{Suggested fix.}
+Generate the manifest after all manuscript and result corrections, include it
+in the archive, and add a documented verification command.  The manifest
+itself must not be regenerated silently without updating the release date or
+version.
+
+\subsection*{8. Likely issue: the CPR odds-ratio conversion uses an incompatible marginal baseline}
+
+\paragraph{Location.}
+\emph{main.tex}, ``Clinically eligible OHCA time-response conversion,''
+Equations~\((3)\)--\((4)\) and the statement that \(15{,}000/78{,}048=19.2\%\)
+is the ``compatible baseline.''
+
+\paragraph{Problem.}
+The cited study's \(19.2\%\) is overall survival across all bystander-CPR delay
+categories.  The reported reference-category survival for CPR within one
+minute is \(22.4\%\), and the \(0.91\) and \(0.73\) values are adjusted
+category odds ratios, not estimates from a fitted constant causal log-odds
+slope.  Dividing \(-\log(0.91)\) by two and \(-\log(0.73)\) by four and applying
+that slope to the marginal \(19.2\%\) risk is therefore a planning
+approximation, not an exact conversion from a compatible baseline.
+
+\paragraph{Why it matters.}
+This affects the implementation-facing interpretation of
+\(\beta_{\mathrm{CPR}}\).  The current language component is small, but the same
+method could become material if the eligible population or recovered-time
+assumptions increase.
+
+\paragraph{Suggested fix.}
+Use category-specific risks and uncertainty, fit a curve to the reported delay
+categories, or obtain standardized risks from the authors.  At minimum, replace
+``compatible baseline'' with ``marginal same-cohort baseline used for an
+approximate transport,'' and state that adjusted odds ratios are being treated
+as a constant per-minute planning slope.
+
+\subsection*{9. Role/terminology drift: Functions 1--5 have conflicting mortality descriptions}
+
+\paragraph{Location.}
+\emph{main.tex}, ``Treatment of all 23 functions'' and the mature ``Earlier
+correct 911'' pathway; \emph{Main\_economic.tex}, Table~1.
+
+\paragraph{Problem.}
+The mortality function table says Functions 1--6 contribute ``only through''
+the whole-program 988 attribution.  The mature mortality model nevertheless
+contains an ``Earlier correct 911'' pathway, while the economic paper explicitly
+maps Functions 1--5 to correct first-service selection and earlier 911 access.
+The mature mortality paper does not state which functions feed the earlier-911
+row, leaving the same functions with conflicting role descriptors across the
+manuscripts.
+
+\paragraph{Why it matters.}
+The ambiguity prevents an implementer from tracing all 23 functions into the
+mature mortality model and weakens the claim of full integration.
+
+\paragraph{Suggested fix.}
+Provide one cross-paper function-to-pathway matrix with separate columns for
+the evidence-only, current-attribution, mature mortality, and economic models.
+If Functions 1--5 feed mature earlier-911 mortality, revise ``only through
+988'' to apply explicitly to the current-attribution scenario.
+
+\section*{Claim calibration and meaningful editorial findings}
+
+\subsection*{Mortality-neutral is not evidence-neutral}
+
+\paragraph{Location.}
+\emph{Main\_economic.tex}, executive summary and conclusion, which call
+\(\$8.35\) billion the ``clean mortality-neutral result.''
+
+\paragraph{Problem and significance.}
+The sensitivity removes beneficial and adverse mortality terms, but it retains
+author-specified medical-resource deltas, nonfatal productivity, QALYs,
+disability effects, adoption, relevance, and technical-success priors.  The
+result is neutral only with respect to mortality credit, not with respect to
+clinical or economic evidence.
+
+\paragraph{Suggested fix.}
+Use ``mortality-credit-neutral planning result'' and preserve the same
+assumption-conditional caveat used for the other economic totals.
+
+\subsection*{Notation overload should be removed}
+
+\paragraph{Location.}
+\emph{Main\_economic.tex} uses \(G_{ir}\) for dollar-valued gross public
+resource and \(G_j\) for a dimensionless maturity multiplier.
+\emph{main.tex} uses \(A_j\) for affected incidents while also using
+unsubscripted \(A\) for the shared user-activation multiplier.
+
+\paragraph{Why it matters.}
+These are distinct quantities with different units and roles, and the overload
+is avoidable in implementation-facing equations.
+
+\paragraph{Suggested fix.}
+Rename the economic maturity multiplier \(M_j\), and rename the shared
+activation factor \(U\) or \(A_{\mathrm{act}}\).  Add units to the symbol
+definitions.
+
+\section*{Proofing sweep}
+
+The bundled mechanical scan was run on both compiled manuscripts.  Its
+semicolon-capitalization hits were false positives caused by acronyms, proper
+nouns, table grade labels, and publication titles.  It found no verified
+duplicated punctuation, malformed ``into \ldots{} into'' frames, product-name
+capitalization errors, or \(\arctan(x/y)\)-type branch ambiguity.  No inverse
+trigonometric expressions occur in the reviewed equations.
+
+The following high-confidence cleanup items remain:
+\begin{itemize}
+\item \textbf{Bibliographies:} several entries are incomplete.  These include
+\texttt{kreuter211}, \texttt{ehr2024}, \texttt{fall2022},
+\texttt{fallstudy}, \texttt{autocall2023}, \texttt{autocallstudy},
+\texttt{hia2023}, and \texttt{pif2013}.  Add authors, year, journal/report
+title, volume/pages, and DOI or stable report identifier where available.
+\item \textbf{Economic pathway table heading:} ``Excl. VSL/ mortality
+production'' is ambiguous.  Replace it with ``Excluding VSL and mortality
+production'' to match the caption and code.
+\item \textbf{Executable documentation:}
+\path{pec_economic_simulation.py} says its assumptions are documented in
+\path{pec_economic_value.tex}, which is not in the archive.  Replace that name
+with \path{Main_economic.tex} or rename the manuscript consistently.
+\end{itemize}
+
+\section*{External-verification status}
+
+Spot checks support the quoted primary-source values for
+\texttt{nguyen2024}, \texttt{video2025}, \texttt{hhsvalues2026},
+\texttt{patel2026}, and \texttt{ombm2523}.  The paper correctly labels the
+988 result as an external association rather than a PEC effect.
+
+The following items still require external or new empirical verification and
+must not be upgraded from planning assumptions in the current text:
+\begin{itemize}
+\item the scene-to-patient mortality transport factor \(\kappa_A\);
+\item a national fire response-time/property-loss elasticity matching the
+proposed endpoint and implementation;
+\item PEC-specific reach, activation, end-to-end success, overlap, beneficial
+ARR, adverse ARR, QALY, and per-event economic deltas;
+\item traveler emergency-number unfamiliarity and incident consequences by
+destination; and
+\item the provenance of the unavailable original PEC binary source documents.
+\end{itemize}
+Time-sensitive national anchors should also be refreshed as one dated release
+and accompanied by archived source extracts or a data dictionary; this review
+did not independently revalidate every anchor in the two long national-input
+tables.
+
+\section*{Highest-priority fixes}
+
+\begin{enumerate}
+\item Rebuild the public fiscal/capacity calculation from a common gross
+resource ledger; do not rely on the current tautological assertion.
+\item Decide whether the economic analysis is an aggregate pathway model or a
+true paired incident simulation, and make the code and methods agree.
+\item Implement one multinomial allocation for the five acute mortality
+pathways and isolate parameter RNG streams from annual count noise.
+\item Implement or remove the printed fire-loss equation and cap.
+\item Correct seeds, companion-stream handling, the ten-year table, and the
+missing SHA-256 manifest; then regenerate all manuscript tables directly from
+machine-readable results.
+\item Clarify the CPR odds-ratio transport and publish a single cross-paper
+function-to-pathway map.
+\end{enumerate}
+
+After these changes, the manuscripts' careful identification caveats would be
+substantially better matched by the executable model.  Until then, the
+mortality results remain transparent planning scenarios, while the economic
+headlines should be treated as provisional because the claimed non-overlap,
+pairing, and property-loss mechanisms are not yet implemented as described.
+
+\end{document}

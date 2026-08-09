@@ -1,0 +1,365 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,array,booktabs,tabularx}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip}
+\setlength{\emergencystretch}{3em}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\title{Technical Review of\\
+\emph{Public Emergency Codes: Evidence Audit, Assumption-Conditional Mortality
+Scenarios, and Full-Implementation Potential}}
+\author{}
+\date{August 8, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The manuscript is unusually explicit that its PEC mortality outputs are
+assumption-conditional planning quantities rather than identified causal
+effects.  The displayed modal calculations were checked against the supplied
+JSON files: the current-attribution total ($67.416$), mature all-pathway total
+($2657.158$), and Tier-C-zero total ($1352.812$) agree before rounding.  Units
+and benefit-minus-harm signs are also internally consistent in the displayed
+equations.
+
+Major revision is nevertheless required before the mortality headlines are
+technically defensible.  The current OHCA calculation combines a whole-registry
+denominator and survival probability with effect slopes from narrower clinical
+populations; the mature model does not mathematically enforce its claimed
+exclusion between the separate cardiac-arrest row and the acute language/access
+rows.  The Tier-C-zero result also remains dominated by positive PEC-specific
+quantities that the manuscript itself identifies as author-specified priors.
+The supplied code reproduces the archived results exactly, but its
+version-control/deposit status and machine-readable seed metadata need repair.
+These are structural issues, not presentation details.
+
+\section*{Technical findings}
+
+\subsection*{1. An unidentified effect is assigned the numerical value zero}
+
+\textbf{Status: definite conceptual error.}
+
+\textbf{Location.} Abstract; ``Scope, estimands, and interpretation'';
+``Observed evidence without PEC attribution''; and the boxed statement
+\[
+\boxed{L_{\mathrm{ID}}=0\text{ identified lives/year}.}
+\]
+
+\textbf{Problem.} The paper first defines $L_{\mathrm{ID}}$ as a PEC mortality
+effect identified by current data, then states that $L_{\mathrm{ID}}$ is not
+identified, and finally assigns it the value zero.  Failure to identify or
+estimate an effect is not an estimate of a zero effect.  The qualifier
+``identified lives'' explains the intended bookkeeping convention but does not
+repair the estimand.
+
+\textbf{Why it matters.} The notation can be read, cited, or imported into a
+downstream model as an observed null.  It also conflicts with the conclusion's
+correct statement that the effect ``remains unidentified.''
+
+\textbf{Suggested fix.} Report the evidence-only PEC effect as ``not identified''
+or ``not estimable from current data,'' without a numerical equality.  If a
+bookkeeping quantity is needed, define a separate variable, for example
+\[
+L_{\mathrm{credited}}^{\mathrm{evidence\ only}}=0,
+\]
+and state that this is a decision rule assigning no mortality credit, not an
+estimate of the true effect.
+
+\subsection*{2. Equation~\textup{(7)} mixes incompatible OHCA populations}
+
+\textbf{Status: definite model/estimand mismatch; direction and magnitude of
+the resulting bias are not identifiable from the manuscript.}
+
+\textbf{Location.} ``Adult OHCA time-response conversion,''
+``Incident-level language/access overlap,'' Table~4, and
+\begin{align*}
+L_{\mathrm{OHCA}}=N_{\mathrm{OHCA}}\Bigl\{&(a_L-a_J)
+d(s,\beta_{\mathrm{CPR}},t_L)+(a_A-a_J)d(s,\beta_{\mathrm R},t_A)\\
+&+a_J[\operatorname{logit}^{-1}(\operatorname{logit}s
++\beta_{\mathrm{CPR}}t_L+\beta_{\mathrm R}t_A)-s]\Bigr\}.
+\end{align*}
+
+\textbf{Problem.} $N_{\mathrm{OHCA}}$ is the full annual EMS-treated
+nontraumatic OHCA population and $s=0.105$ is the all-case CARES survival
+probability.  In contrast, $\beta_{\mathrm{CPR}}$ is derived from
+\texttt{nguyen2024}, whose analyzed population is witnessed OHCA receiving
+bystander CPR.  The model has no explicit factor for witnessed status,
+bystander/dispatcher CPR eligibility, or receipt of CPR whose start time can be
+changed.  The manuscript's cited 2024 CARES summary itself shows that only
+$37.5\%$ of registered arrests were bystander-witnessed and that CPR was
+initiated by a bystander in $41.9\%$; the relevant intersection is narrower
+than either marginal percentage.  Moreover, the $10.5\%$ all-case baseline is
+not the baseline survival probability for the slope-estimation subgroup.
+
+\textbf{Why it matters.} Applying a conditional odds-ratio slope to the entire
+OHCA denominator is not a valid standardization.  The reported language-only
+and joint language/CPR contributions therefore do not correspond to a clearly
+defined target population, even though their arithmetic is correct given the
+inputs.
+
+\textbf{Suggested fix.} Define a clinically eligible denominator explicitly,
+for example
+\[
+N_{L,\mathrm{eligible}}
+=N_{\mathrm{OHCA}}f_{\mathrm{adult}}f_{\mathrm{witnessed}}
+f_{\mathrm{CPR\ actionable}},
+\]
+estimate or elicit each factor transparently, and use a baseline survival
+probability from the same target subgroup as the transported slope.  An
+alternative is direct standardization over witnessed status, initial rhythm,
+location, and CPR source.  Do not hide clinical eligibility inside $u_L$:
+Table~4 currently describes $u_L$ as the PEC end-to-end technical/workflow
+chain, not as the outcome-study eligibility fraction.
+
+\subsection*{3. The responder-access pathway changes time endpoints without a
+transport argument}
+
+\textbf{Status: likely technical issue and required notation/terminology-drift
+finding.}
+
+\textbf{Location.} The measured evidence is described as ``building access
+time''; $t_A$ is later called ``patient-contact time recovered''; and
+$\beta_{\mathrm R}$ is calibrated from ``EMS response-time'' studies in
+\texttt{holmen2020} and \texttt{damdin2025}.
+
+\textbf{Problem.} The local \texttt{vertical2007} study measures the interval
+from arrival on scene to reaching the patient's side.  The survival studies
+used for $\beta_{\mathrm R}$ analyze ambulance/EMS response-time measures in
+different systems and populations.  The paper treats these descriptors as if
+they identified the same time variable, but it does not specify each clock's
+start and stop events or justify transporting the survival association across
+those operational phases.
+
+\textbf{Why it matters.} A minute removed before vehicle arrival, a minute
+removed while entering a building, and a minute removed before first clinical
+intervention need not share the same confounding structure or marginal survival
+association.  The zero lower endpoint for $\beta_{\mathrm R}$ represents
+uncertainty but does not define the estimand.
+
+\textbf{Suggested fix.} Define separate variables such as
+$t_{\mathrm{dispatch\to scene}}$, $t_{\mathrm{scene\to patient}}$, and
+$t_{\mathrm{patient\to treatment}}$.  Use an outcome model calibrated to the
+same endpoint as the PEC mechanism, or present the current conversion as a
+clearly labeled cross-endpoint transport sensitivity with an explicit
+transportability assumption.
+
+\subsection*{4. Mature-model exclusion of overlapping OHCA mechanisms is not
+mathematically enforced}
+
+\textbf{Status: definite implementation ambiguity and likely double-counting
+risk.}
+
+\textbf{Location.} ``Mature full-implementation model,'' Table~8, and
+\[
+A_j=I_jr_ju_j,\qquad
+L_F=\sum_j(\lambda_j^+-\lambda_j^-).
+\]
+
+\textbf{Problem.} Four rows based on the $36.367261$ million acute-EMS
+denominator are declared mutually exclusive, but ``OHCA bystander assistance''
+is outside that group and uses its own $220{,}000/250{,}000/300{,}000$
+denominator.  The text says that the OHCA row ``excludes language and
+responder-access mechanisms counted elsewhere,'' yet neither the displayed
+equations nor the supplied implementation performs this exclusion.  In
+\path{pec_full_potential_simulation.py}, normalization is applied only to the
+four names in \texttt{acute\_ems\_group}; the cardiac-arrest bystander row is
+not a member of that set and is then added separately.  The relevance input
+could have been elicited for a pre-excluded subset, but neither the input
+definition nor code demonstrates that conditioning.  Nothing in the executable
+allocation prevents the same underlying class of cardiac-arrest cases from
+being represented in both the separate OHCA row and a language or
+location/access share of the acute-EMS denominator.
+
+\textbf{Why it matters.} The manuscript identifies incident-level overlap as a
+central correction in the current scenario, but the mature scenario relies on
+a verbal exclusion that cannot be checked.  The location/access pathway is the
+largest surviving contributor in the Tier-C-zero simulation, so even modest
+overlap can materially alter the headline.
+
+\textbf{Suggested fix.} Construct one incident partition that includes the OHCA
+submechanisms, or condition the OHCA relevance distribution on not being
+assigned to the language/access acute categories.  Publish the precise
+allocation formula and a simulation assertion showing that each incident's
+mortality outcome is allocated once across all relevant rows, not merely once
+within the four-row acute group.
+
+\subsection*{5. ``Tier-C-zero'' is not an evidence-grounded lower scenario}
+
+\textbf{Status: important interpretation problem.}
+
+\textbf{Location.} Abstract, Tables~8--10, ``Results that may be quoted,'' and
+the conclusion.
+
+\textbf{Problem.} Zeroing rows labeled C leaves positive effects for
+988/crisis, OHCA bystander assistance, silent/language, and location/access.
+For every one of these rows, Table~8 and the JSON input file state that the
+PEC-specific relevance, implementation, attribution, or absolute risk change
+remains author-specified.  Thus the $1746$ median does not show what current
+evidence alone supports and should not be interpreted as a conservative
+empirical floor.  In addition, every surviving beneficial pathway has
+continuous, strictly positive support for its relevance, success, beneficial
+ARR, and shared clinical-effect factor.  Near-certain benefit is therefore
+largely imposed by the scenario support rather than learned from PEC outcomes.
+
+\textbf{Why it matters.} Readers may infer that the sensitivity removes all
+unsupported mortality credit, when it removes only the rows assigned the
+letter C.  The label is especially consequential because this result is
+prominent in the abstract and companion economic paper.
+
+\textbf{Suggested fix.} Keep the existing sensitivity but label it precisely,
+for example ``designated-Tier-C-positive-effects-zero.''  Add a second
+``all nonidentified PEC positive effects zero'' analysis that also removes the
+positive PEC-specific portions of the external+prior and B+prior rows.  Report
+the external association, transported process evidence, PEC attribution, and
+PEC ARR priors as separate layers.
+
+\subsection*{6. The numerical results reproduce, but the reproducibility package
+and metadata remain incomplete}
+
+\textbf{Status: definite deposit/versioning problem and reporting ambiguity.}
+
+\textbf{Location.} ``Reproducibility,'' ``Complete mature input
+distributions,'' and ``Mature probabilistic results.''
+
+\textbf{Problem.} The supplied Python functions were run in memory with the
+published draw counts and streams.  Every current and mature archived summary
+reproduced exactly (maximum absolute numerical difference $0$), including the
+dependence sensitivities and predictive distributions.  However, the
+repository's \path{.gitignore} excludes all Python files and the mortality
+scripts are not tracked by Git, so an ordinary repository clone or commit can
+omit the very code needed for reproduction.  The two load-bearing source
+documents cited as \texttt{pecinputs} and \texttt{pecfunctions} are also absent.
+Finally, \path{pec_full_potential_results.json} labels \texttt{20260808} simply
+as ``seed,'' while the primary RNG is actually initialized with
+\texttt{20260809}; the manuscript explains the $+1$ offset, but the
+machine-readable metadata does not.  The code also multiplies beneficial ARR
+by the shared clinical-effect factor, an operation not shown explicitly in
+Equations~(10)--(11).
+
+\textbf{Why it matters.} The current working directory is numerically
+reproducible, but the reproducibility claim may fail when the paper is archived
+or cloned.  Ambiguous seed metadata also makes it easy for an independent
+implementation to use the base seed rather than the actual primary stream.
+
+\textbf{Suggested fix.} Track or otherwise deposit the exact scripts and cited
+source documents; add a manifest with hashes; and use distinct metadata fields
+such as \texttt{base\_seed=20260808} and
+\texttt{primary\_rng\_seed=20260809}.  Add the clinical-effect factor to the
+formal mature-model equations and retain machine-checkable assertions for the
+modal totals, no-double-count allocation, public result summaries, and
+Tier-C-zero logic.
+
+\subsection*{7. Independent Poisson benefit and harm counts require
+justification}
+
+\textbf{Status: likely issue; probably numerically small because the event
+probabilities are small.}
+
+\textbf{Location.} Equation~(12), where $S^+$ and $S^-$ are sampled as
+independent Poisson counts.
+
+\textbf{Problem.} Beneficial and adverse outcomes arise from the same finite
+set of affected incidents and are generally mutually exclusive for an
+individual outcome.  Independent Poisson draws are exact only under an
+appropriate Poisson-exposure/thinning construction, which is not stated.  With
+fixed annual opportunities, a binomial or multinomial model is the direct
+construction.
+
+\textbf{Why it matters.} The approximation discards the finite-population and
+mutual-exclusion covariance and can inflate predictive variance.  In addition,
+the term ``predictive interval'' may be read more broadly than intended: the
+calculation adds conditional count noise but not unmodeled annual changes in
+case mix, adoption, or system behavior.
+
+\textbf{Suggested fix.} Either justify the Poisson-thinning approximation and
+quantify its effect, or simulate pathway-specific affected incidents and
+multinomial outcome categories.  Rename the interval ``conditional annual-count
+predictive interval'' to delimit what is and is not predicted.
+
+\section*{Editorial, citation, and reporting findings}
+
+\begin{enumerate}
+\item \textbf{Headline inconsistency.} The abstract combines the parameter
+median $3535$ with the predictive interval $2139$--$5700$, whereas Table~10's
+predictive median is $3536$.  Use one internally matched row throughout.  The
+quoted result and conclusion already use $3536$.
+
+\item \textbf{Reference \texttt{vertical2007}.} The entry attributes
+\emph{The ``Vertical Response Time'': Barriers to Ambulance Response in an
+Urban Area} to ``Morrison LJ et al.''  The cited 449-call New York study is by
+Silverman RA, Galea S, Blaney S, et al.  Correct the authors and add the journal,
+volume, pages, and DOI; the current entry appears to conflate two different
+patient-access studies.
+
+\item \textbf{Reference \texttt{pediatric2026}.} Verify and update the journal
+title.  The 2026 article record appears under \emph{Circulation: Population
+Health and Outcomes}, not \emph{Circulation: Cardiovascular Quality and
+Outcomes}.
+
+\item \textbf{List grammar near \texttt{nguyen2024}.} The penultimate evidence
+bullet places the word ``and'' after the \texttt{nguyen2024} citation and
+immediately before a new list item.  Remove the dangling ``and'' or rewrite the
+bullets as complete sentences.
+
+\item \textbf{NEMSIS 2025 anchor.} The cited \texttt{nemsis2025} landing page
+does not document the stated $63.636$ million count or the extraction/filter
+logic.  Supply a dated data release, query, or archived output sufficient to
+verify that number.
+\end{enumerate}
+
+\section*{Proofing sweep}
+
+The bundled mechanical scan was run on the compiled mortality manuscript, the
+companion economic manuscript, and the mortality source.  Its only mortality
+hits were semicolon-capitalization candidates inside compact table cells; spot
+checking showed these were false positives.  No duplicated-comma/period,
+malformed ``into \ldots{} into'' frame, product-name capitalization, or
+\texttt{arctan(x/y)} branch pattern was found.  The high-confidence reference
+and list defects identified manually are reported above.
+
+\section*{Checks completed without an additional concrete error}
+
+The principal displayed equations were checked for units and signs.  Equations
+for $L_{988}$, $d(p,\beta,t)$, $A_j$, $\lambda_j^{\pm}$, and $L_F$ are
+dimensionally consistent as written.  The modal pathway table adds correctly
+from its published inputs.  The supplied mortality scripts reproduce all
+archived current and mature JSON summaries exactly.  No inverse-trigonometric,
+quadrant, coordinate-frame, or branch-convention expression occurs in the
+manuscript.  These checks do not resolve the population, endpoint, and overlap
+problems above.
+
+\section*{Items needing external verification or unavailable materials}
+
+The bibliographic metadata and quoted results for \texttt{patel2026},
+\texttt{nguyen2024}, \texttt{video2025}, and the 2024 CARES summary were
+spot-checked against primary records and are broadly consistent, subject to the
+population-transport issues already described.  The $63.636$ million 2025
+NEMSIS extraction and the author-supplied function/scenario documents remain
+unverifiable from the deposited files.  The probabilistic mortality summaries
+were independently reproduced from the supplied scripts and JSON input.
+
+\section*{Highest-priority fixes}
+
+\begin{enumerate}
+\item Replace ``$L_{\mathrm{ID}}=0$'' with a nonnumeric not-identified statement.
+\item Rebuild the current OHCA calculation using outcome-study-compatible
+eligible denominators and baseline risks, with time endpoints defined
+explicitly.
+\item Enforce one mature incident partition across the OHCA, language, and
+location/access mechanisms and rerun all mortality and economic results.
+\item Track and deposit the scripts and source documents, disambiguate the base
+and actual RNG seeds, and write the clinical-effect operation into the formal
+model.
+\item Relabel Tier-C-zero and add a sensitivity that removes all nonidentified
+positive PEC mortality effects.
+\item Only after rerunning the model, synchronize the abstract, quoted result,
+conclusion, companion economic paper, and archived JSON files.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,66 @@
+table,variable,type,required,unit,allowed_values,description,validation_role
+episodes,episode_id,string,yes,none,,Deidentified unique emergency episode identifier,primary_key
+episodes,cluster_id,string,yes,none,,Randomized PSAP/platform implementation cluster,cluster_assignment
+episodes,person_linkage_token,string,no,none,,Salted nonreversible token for repeated-episode linkage,repeated_episode_adjustment
+episodes,incident_start_utc,datetime,yes,UTC ISO-8601,,Earliest qualifying request detection or system contact,time_zero
+episodes,incident_family,enum,yes,none,cardiac_arrest|cardiovascular|stroke|neurologic|respiratory|trauma|hemorrhage|sepsis_infection|toxicologic|endocrine|obstetric_neonatal|pediatric|environmental|surgical|hematologic_oncologic|behavioral_health|fire|police_public_safety|social_resource|other,Prespecified incident family,stratification
+episodes,randomized_assignment,enum,yes,none,control|pec,Cluster-period intention-to-treat assignment,primary_exposure
+episodes,rollout_period,integer,yes,period,>=0,Prespecified stepped-wedge period,time_adjustment
+episodes,baseline_severity,string,yes,scale-specific,,Condition-appropriate severity recorded before PEC-mediated treatment,covariate
+episodes,geography_type,enum,yes,none,urban|suburban|rural|frontier|unknown,Geographic stratum,heterogeneity
+function_use,function_event_id,string,yes,none,,Unique function-event identifier,primary_key
+function_use,episode_id,string,yes,none,,Episode foreign key,foreign_key
+function_use,function_number,integer,yes,PEC function,1..23,PEC function displayed or used,function_exposure
+function_use,displayed,boolean,yes,none,0|1,Function was visible to the user,process
+function_use,activated,boolean,yes,none,0|1,Function was activated,process
+function_use,technically_completed,boolean,yes,none,0|1,Technical transaction completed,process
+function_use,receiver_accessed,boolean,yes,none,0|1,Receiving system accessed the PEC information,process
+function_use,event_utc,datetime,yes,UTC ISO-8601,,Function event timestamp,sequence
+function_use,failure_code,string,no,none,,Prespecified technical or workflow failure code,safety
+system_contacts,contact_id,string,yes,none,,Unique administrative contact identifier,primary_key
+system_contacts,episode_id,string,yes,none,,Episode foreign key,foreign_key
+system_contacts,system,enum,yes,none,988|211|911|ems|fire|police|mobile_crisis|ed|hospital|rehabilitation|long_term_care|passive_monitoring|other,System generating the record,resource_mapping
+system_contacts,contact_start_utc,datetime,yes,UTC ISO-8601,,Contact or response start,sequence
+system_contacts,contact_end_utc,datetime,no,UTC ISO-8601,,Contact or response end,workload
+system_contacts,patient_contact_utc,datetime,no,UTC ISO-8601,,First patient contact when applicable,time_endpoint
+system_contacts,definitive_treatment_utc,datetime,no,UTC ISO-8601,,First definitive treatment when applicable,time_endpoint
+system_contacts,transfer_count,integer,yes,count,>=0,Transfers or redirections attributed to the contact,workload
+system_contacts,duplicate_or_status,boolean,yes,none,0|1,Duplicate or status contact indicator,workload
+system_contacts,abandoned,boolean,yes,none,0|1,Contact abandoned before completion,workload
+outcomes,episode_id,string,yes,none,,Episode foreign key and one-row-per-episode key,primary_key
+outcomes,death_24h,boolean,yes,none,0|1,All-cause death within 24 hours,outcome
+outcomes,death_discharge,boolean,yes,none,0|1,Death before hospital discharge,outcome
+outcomes,death_30d,boolean,yes,none,0|1,All-cause death within 30 days,primary_outcome
+outcomes,neurologic_scale,string,no,scale-specific,,Named neurological or functional scale,outcome
+outcomes,neurologic_score,string,no,scale-specific,,Score on the named scale,outcome
+outcomes,major_disability,boolean,yes,none,0|1,Prespecified major-disability outcome,outcome
+outcomes,adverse_event,boolean,yes,none,0|1,Any prespecified PEC-related safety event,safety
+outcomes,adverse_event_type,string,no,none,,Prespecified adverse-event category,safety
+resources,resource_id,string,yes,none,,Unique resource row identifier,primary_key
+resources,episode_id,string,yes,none,,Episode foreign key,foreign_key
+resources,payer,enum,yes,none,medicare|medicaid|other_public|private_insurer|household|employer|uncompensated|other,Payer perspective,payer_analysis
+resources,resource_type,string,yes,none,,Prespecified call labor responder transport care disability productivity or property resource,economic_outcome
+resources,quantity,number,yes,resource-specific,,Observed resource quantity,economic_outcome
+resources,unit,string,yes,none,,Minutes visits transports bed-days dollars or other defined unit,economic_outcome
+resources,marginal_cost,number,no,USD,,Avoidable marginal resource cost before inflation adjustment,economic_outcome
+resources,dollar_year,integer,no,calendar year,>=2000,Price year for monetary values,inflation
+deployment,cluster_period_id,string,yes,none,,Unique cluster-period deployment record,primary_key
+deployment,cluster_id,string,yes,none,,Randomized implementation cluster,cluster_assignment
+deployment,period_start_utc,datetime,yes,UTC ISO-8601,,Start of deployment measurement period,sequence
+deployment,period_end_utc,datetime,yes,UTC ISO-8601,,End of deployment measurement period,sequence
+deployment,pec_available,boolean,yes,none,0|1,PEC technically available in cluster-period,implementation
+deployment,receiver_compatibility,number,yes,proportion,0..1,Share of relevant receiving workflows technically compatible,implementation
+deployment,training_coverage,number,yes,proportion,0..1,Share of relevant workforce completing training,implementation
+deployment,active_user_reach,number,yes,proportion,0..1,Share of eligible population with active PEC availability,implementation
+deployment,fixed_cost,number,yes,USD,>=0,Observed fixed deployment cost,economic_input
+deployment,variable_cost,number,yes,USD,>=0,Observed period-specific variable deployment cost,economic_input
+deployment,dollar_year,integer,yes,calendar year,>=2000,Price year for deployment costs,inflation
+queue_intervals,queue_interval_id,string,yes,none,,Unique PSAP interval record,primary_key
+queue_intervals,cluster_id,string,yes,none,,PSAP cluster identifier,cluster_assignment
+queue_intervals,interval_start_utc,datetime,yes,UTC ISO-8601,,Start of prespecified queue interval,sequence
+queue_intervals,calls_arriving,integer,yes,count,>=0,Calls entering the queue,queue_outcome
+queue_intervals,call_takers_available,number,yes,FTE-equivalent,>=0,Available call-taker capacity,queue_covariate
+queue_intervals,call_taker_minutes,number,yes,minutes,>=0,Observed call-taker workload,primary_workload
+queue_intervals,calls_waiting_max,integer,yes,count,>=0,Maximum queue length in interval,queue_outcome
+queue_intervals,calls_abandoned,integer,yes,count,>=0,Abandoned calls in interval,queue_outcome
+queue_intervals,callbacks,integer,yes,count,>=0,Callbacks generated in interval,queue_outcome
