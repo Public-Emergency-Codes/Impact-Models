@@ -42,7 +42,7 @@ validation/       Prospective trial, elicitation, and data specifications
 Use GitHub Issues for:
 
 - reproducibility or implementation defects;
-- challenges to a probability distribution, causal transport, or cost input;
+- challenges to a probability distribution or causal transport;
 - proposed primary-source replacements;
 - overlap, dependence, or accounting concerns; and
 - documentation or presentation corrections.
@@ -58,8 +58,8 @@ runtime accounting identities, deployment-data schema tests, exact regenerated
 outputs, LaTeX compilation, and `release-manifest.sha256`.
 
 Computational reproduction does not validate the interim priors. Independent
-expert elicitation, linked episode data, procurement costing, randomized
-deployment evaluation, and external statistical reproduction remain pending.
+expert elicitation, linked episode data, randomized deployment evaluation, and
+external statistical reproduction remain pending.
 
 ## Generated files
 

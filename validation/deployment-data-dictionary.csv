@@ -52,9 +52,6 @@ deployment,pec_available,boolean,yes,none,0|1,PEC technically available in clust
 deployment,receiver_compatibility,number,yes,proportion,0..1,Share of relevant receiving workflows technically compatible,implementation
 deployment,training_coverage,number,yes,proportion,0..1,Share of relevant workforce completing training,implementation
 deployment,active_user_reach,number,yes,proportion,0..1,Share of eligible population with active PEC availability,implementation
-deployment,fixed_cost,number,yes,USD,>=0,Observed fixed deployment cost,economic_input
-deployment,variable_cost,number,yes,USD,>=0,Observed period-specific variable deployment cost,economic_input
-deployment,dollar_year,integer,yes,calendar year,>=2000,Price year for deployment costs,inflation
 queue_intervals,queue_interval_id,string,yes,none,,Unique PSAP interval record,primary_key
 queue_intervals,cluster_id,string,yes,none,,PSAP cluster identifier,cluster_assignment
 queue_intervals,interval_start_utc,datetime,yes,UTC ISO-8601,,Start of prespecified queue interval,sequence

@@ -9,7 +9,7 @@ August 9, 2026 release.
 Replace interim author-specified pre-deployment priors with independently
 elicited distributions for future PEC reach, adoption, activation, technical
 completion, receiver compatibility, unique-episode allocation, beneficial and
-adverse effects, receiving-system costs, deployment costs, and dependence.
+adverse effects, receiving-system costs, and dependence.
 
 ## Required expertise
 
@@ -58,7 +58,6 @@ headlines must be disclosed.
 - unique-episode/repeat-record distributions for 988, 211, 911, EMS, OHCA, and
   passive monitoring
 - sending- and receiving-system resource deltas
-- one-time and recurring deployment-cost distributions
 - rollout slope, midpoint, saturation, and deployment-realization probabilities
 - full elicited correlation matrix and copula sensitivity specification
 - transportability score and penalty for each external evidence source

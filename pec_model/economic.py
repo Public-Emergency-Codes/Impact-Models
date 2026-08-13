@@ -11,8 +11,6 @@ import numpy as np
 from .economic_inputs import (
     CALL_MIX,
     NEAR_TERM_ECONOMIC_SEED,
-    DEPLOYMENT_COST_INPUTS,
-    DEPLOYMENT_COST_SCOPE,
     DRAWS,
     DRIVER_RANGES,
     FEATURE_NAMES,
@@ -193,50 +191,6 @@ def scenario_affected(
     return np.minimum(affected, opportunities), regional_cost_factor
 
 
-def deployment_cost_draws(rng: np.random.Generator) -> dict[str, np.ndarray]:
-    capital = draw(rng, DEPLOYMENT_COST_INPUTS["one_time_capital_and_integration"])
-    operations = draw(rng, DEPLOYMENT_COST_INPUTS["annual_operations_training_security"])
-    replacement = draw(rng, DEPLOYMENT_COST_INPUTS["annual_replacement_and_upgrade"])
-    public_share = draw(rng, DEPLOYMENT_COST_INPUTS["public_financing_share"])
-    capital_fixed_share = draw(
-        rng, DEPLOYMENT_COST_INPUTS["fixed_predeployment_capital_share"]
-    )
-    operations_fixed_share = draw(
-        rng, DEPLOYMENT_COST_INPUTS["fixed_recurring_operations_share"]
-    )
-    replacement_fixed_share = draw(
-        rng, DEPLOYMENT_COST_INPUTS["fixed_recurring_replacement_share"]
-    )
-    near_term_maturity = draw(
-        rng, DEPLOYMENT_COST_INPUTS["near_term_deployment_maturity"]
-    )
-    rate = 0.07
-    years = 10
-    capital_recovery = rate * (1.0 + rate) ** years / ((1.0 + rate) ** years - 1.0)
-    fixed_capital = capital * capital_fixed_share
-    rollout_capital = capital - fixed_capital
-    fixed_operations = operations * operations_fixed_share
-    adoption_operations = operations - fixed_operations
-    fixed_replacement = replacement * replacement_fixed_share
-    adoption_replacement = replacement - fixed_replacement
-    full_annualized = capital * capital_recovery + operations + replacement
-    return {
-        "capital": capital,
-        "fixed_capital": fixed_capital,
-        "rollout_capital": rollout_capital,
-        "operations": operations,
-        "fixed_operations": fixed_operations,
-        "adoption_operations": adoption_operations,
-        "replacement": replacement,
-        "fixed_replacement": fixed_replacement,
-        "adoption_replacement": adoption_replacement,
-        "public_share": public_share,
-        "near_term_maturity": near_term_maturity,
-        "capital_recovery_factor": np.full(DRAWS, capital_recovery),
-        "full_annualized": full_annualized,
-    }
-
-
 def stochastic_adoption(
     rng: np.random.Generator,
 ) -> tuple[list[dict[str, float]], dict[str, np.ndarray]]:
@@ -288,21 +242,19 @@ def morris_emulator_screening(component_means: dict[str, float]) -> list[dict[st
         "property_value",
         "mortality_effect",
         "vsl",
-        "deployment_cost",
     )
     rng = np.random.default_rng(20261212)
     delta = 0.2
 
     def evaluate(x: np.ndarray) -> float:
-        reach, compatibility, medical, public_op, productivity, property, mortality, vsl, cost = x
+        reach, compatibility, medical, public_op, productivity, property, mortality, vsl = x
         implementation = reach * compatibility
         direct = component_means["direct"] * implementation * (0.6 + 0.4 * medical)
         capacity = component_means["capacity"] * implementation * public_op
         prod = component_means["productivity"] * implementation * productivity
         prop = component_means["property"] * implementation * property
         mort = component_means["mortality"] * implementation * mortality * vsl
-        deploy = component_means["deployment_cost"] * cost
-        return direct + capacity + prod + prop + mort - deploy
+        return direct + capacity + prod + prop + mort
 
     effects = {name: [] for name in names}
     for _ in range(240):
@@ -344,7 +296,6 @@ def simulate(
         dependence_rho,
         copula_family,
     )
-    costs = deployment_cost_draws(rng)
     adoption_rows, adoption_arrays = stochastic_adoption(rng)
     vsl = draw(rng, (6.6e6, 14.1e6, 21.5e6))
     vqaly = draw(rng, (0.340e6, 0.726e6, 1.107e6))
@@ -573,42 +524,6 @@ def simulate(
     tier_c_zero_societal_including_vsl = mortality_neutral_societal + tier_c_zero_vsl
     adverse_only_societal_including_vsl = mortality_neutral_societal + adverse_only_vsl
 
-    cost_maturity = (
-        np.ones(DRAWS)
-        if scenario == "mature"
-        else costs["near_term_maturity"]
-    )
-    capital_recovery = costs["capital_recovery_factor"]
-    annualized_cost = (
-        costs["fixed_capital"] * capital_recovery
-        + costs["rollout_capital"] * capital_recovery * cost_maturity
-        + costs["fixed_operations"]
-        + costs["adoption_operations"] * cost_maturity
-        + costs["fixed_replacement"]
-        + costs["adoption_replacement"] * cost_maturity
-    )
-    full_annualized_cost_stress = costs["full_annualized"]
-    net_excluding_vsl = societal_excluding_vsl - annualized_cost
-    net_including_vsl = societal_including_vsl - annualized_cost
-    realized_public_50 = np.where(
-        money["public_fiscal"] >= 0.0,
-        0.5 * money["public_fiscal"],
-        money["public_fiscal"],
-    )
-    public_net_50 = realized_public_50 - costs["public_share"] * annualized_cost
-    bcr_excluding_vsl = np.divide(
-        societal_excluding_vsl,
-        annualized_cost,
-        out=np.zeros(DRAWS),
-        where=annualized_cost > 0.0,
-    )
-    bcr_including_vsl = np.divide(
-        societal_including_vsl,
-        annualized_cost,
-        out=np.zeros(DRAWS),
-        where=annualized_cost > 0.0,
-    )
-
     fiscal_realization = {
         str(int(share * 100)): summarize(
             np.where(
@@ -620,23 +535,9 @@ def simulate(
         for share in (0.0, 0.25, 0.5, 0.75, 1.0)
     }
     projection_rows = []
-    discounted_gross = np.zeros(DRAWS)
-    discounted_net = -costs["fixed_capital"]
-    previous_adoption = np.zeros(DRAWS)
     for year in range(1, 11):
         adoption = adoption_arrays[str(year)]
         gross_year = societal_excluding_vsl * adoption
-        rollout_increment = np.maximum(adoption - previous_adoption, 0.0)
-        rollout_capital_year = costs["rollout_capital"] * rollout_increment
-        operating_year = (
-            costs["fixed_operations"]
-            + costs["adoption_operations"] * adoption
-            + costs["fixed_replacement"]
-            + costs["adoption_replacement"] * adoption
-        )
-        net_year = gross_year - operating_year - rollout_capital_year
-        discounted_gross += gross_year / (1.07 ** year)
-        discounted_net += net_year / (1.07 ** year)
         projection_rows.append(
             {
                 "year": year,
@@ -644,22 +545,8 @@ def simulate(
                 "adoption_p5": float(np.quantile(adoption, 0.05)),
                 "adoption_p95": float(np.quantile(adoption, 0.95)),
                 "gross_excluding_vsl_mean": float(np.mean(gross_year)),
-                "fixed_recurring_cost_mean": float(
-                    np.mean(costs["fixed_operations"] + costs["fixed_replacement"])
-                ),
-                "adoption_dependent_recurring_cost_mean": float(
-                    np.mean(
-                        (costs["adoption_operations"] + costs["adoption_replacement"])
-                        * adoption
-                    )
-                ),
-                "rollout_capital_outlay_mean": float(
-                    np.mean(rollout_capital_year)
-                ),
-                "net_excluding_vsl_mean": float(np.mean(net_year)),
             }
         )
-        previous_adoption = adoption
 
     arrays = {
         "potential_variable_public_expenditure_avoided": money["public_fiscal"],
@@ -685,16 +572,6 @@ def simulate(
         "societal_including_vsl": societal_including_vsl,
         "tier_c_zero_societal_including_vsl": tier_c_zero_societal_including_vsl,
         "adverse_only_societal_including_vsl": adverse_only_societal_including_vsl,
-        "annualized_deployment_cost": annualized_cost,
-        "full_annualized_cost_stress": full_annualized_cost_stress,
-        "deployment_cost_maturity": cost_maturity,
-        "public_net_at_50_percent_realization": public_net_50,
-        "net_benefit_excluding_vsl": net_excluding_vsl,
-        "net_benefit_including_vsl": net_including_vsl,
-        "benefit_cost_ratio_excluding_vsl": bcr_excluding_vsl,
-        "benefit_cost_ratio_including_vsl": bcr_including_vsl,
-        "ten_year_discounted_gross_excluding_vsl": discounted_gross,
-        "ten_year_discounted_net_excluding_vsl": discounted_net,
     }
     summaries = {name: summarize(values) for name, values in arrays.items()}
 
@@ -705,15 +582,14 @@ def simulate(
         "public operating cost": drivers["public_operating_cost"],
         "productivity": drivers["productivity_value"],
         "property": drivers["property_loss"],
-        "annualized deployment cost": annualized_cost,
     }
     sensitivity = {
         name: {
             "correlation_excluding_vsl": float(
-                np.corrcoef(driver, net_excluding_vsl)[0, 1]
+                np.corrcoef(driver, societal_excluding_vsl)[0, 1]
             ),
             "correlation_including_vsl": float(
-                np.corrcoef(driver, net_including_vsl)[0, 1]
+                np.corrcoef(driver, societal_including_vsl)[0, 1]
             ),
         }
         for name, driver in sensitivity_drivers.items()
@@ -757,7 +633,6 @@ def simulate(
             "productivity": float(np.mean(money["productivity_morbidity"])),
             "property": float(np.mean(money["property"])),
             "mortality": float(np.mean(lives)) * 14.1e6,
-            "deployment_cost": float(np.mean(annualized_cost)),
         }
     )
     return {
@@ -776,15 +651,6 @@ def simulate(
         "stochastic_adoption": adoption_rows,
         "named_adoption_scenarios": named_adoption_scenarios(),
         "ten_year_projection": projection_rows,
-        "break_even_annual_cost": {
-            "fiscal_only_at_100_percent_realization": summaries[
-                "potential_variable_public_expenditure_avoided"
-            ],
-            "mortality_neutral_societal": summaries["mortality_neutral_societal"],
-            "all_pathway_societal_including_vsl": summaries[
-                "societal_including_vsl"
-            ],
-        },
         "arrays": arrays,
     }
 
@@ -812,9 +678,6 @@ def main() -> None:
         "direct_process_conservative_benchmark",
         "mortality_neutral_societal",
         "societal_including_vsl",
-        "annualized_deployment_cost",
-        "net_benefit_excluding_vsl",
-        "benefit_cost_ratio_excluding_vsl",
     )
     for offset, form in enumerate(
         ("pert", "triangular", "uniform", "logit_normal")
@@ -871,7 +734,6 @@ def main() -> None:
             "public_fiscal_label": "potential variable public expenditure avoided before realization; realization percentages apply only to positive avoided expenditure, while modeled added public costs remain fully counted",
             "public_capacity_partition": "Each primitive public resource element is assigned once: expenditure contains only potentially expenditure-changing units, capacity contains only residual operational value excluded from expenditure, and gross public resource equals expenditure plus residual capacity. Runtime assertions enforce the reconciliation identity.",
             "receiver_cost_rule": "G_jp is the gross paired delta before receiving-system cost, R_jp is the separately drawn receiving-system offset, D_jp=G_jp-R_jp is the net paired delta, and B_jp=A_j D_jp is aggregated once.",
-            "deployment_cost_status": "Illustrative pre-procurement cost envelope split into fixed predeployment capital, rollout capital, fixed recurring, and adoption-dependent recurring components; break-even thresholds remain primary because no procurement study exists.",
             "feature_allocation": "Linear Shapley reporting allocation under the prespecified additive pathway feature game; not a causal effect.",
             "adoption_model": "Stochastic logistic rollout fraction relative to the mature scenario, with uncertain slope, midpoint, and attainable asymptote.",
             "sensitivity": "Local correlation diagnostics, Morris elementary-effects screening of a documented median-input emulator, and low/medium/high Gaussian plus Student-t copula dependence sensitivities within the mortality/implementation and economic-driver blocks.",
@@ -919,8 +781,6 @@ def main() -> None:
                 "equation": "U=sum_r w_r u_r; A=min(I*d*r*U*s*M,I); Z_plus~Bernoulli(p_plus), Z_minus~Bernoulli(p_minus); L=A*(Z_plus*H_plus*Delta_plus-Z_minus*H_minus*Delta_minus). Regional consequence Q=(sum_r w_r u_r q_r)/max(U,1e-9) scales economic deltas and receiving costs only.",
                 "near_term_treatment": "traveler mortality set to zero",
             },
-            "deployment_cost_inputs": DEPLOYMENT_COST_INPUTS,
-            "deployment_cost_scope_without_line_item_allocation": DEPLOYMENT_COST_SCOPE,
             "adoption_parameter_inputs": {
                 "asymptote": [0.55, 0.82, 0.97],
                 "midpoint_year": [3.5, 5.5, 8.0],
@@ -969,9 +829,6 @@ def main() -> None:
             "mortality_neutral_societal",
             "societal_excluding_vsl",
             "societal_including_vsl",
-            "annualized_deployment_cost",
-            "net_benefit_excluding_vsl",
-            "net_benefit_including_vsl",
         ):
             summary = result["summaries"][key]
             print(

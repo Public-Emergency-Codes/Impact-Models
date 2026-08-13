@@ -39,8 +39,8 @@ the expected direction of the problem when possible.
    python scripts/validate_repository.py --rerun --compile
    ```
 
-5. Report changes to means, medians, P5--P95 intervals, benefit-cost ratios,
-   and any threshold probabilities affected by the proposal.
+5. Report changes to means, medians, P5--P95 intervals, and any threshold
+   probabilities affected by the proposal.
 6. Preserve the distinction between observed evidence and prospective priors.
 7. Add or update source provenance for every changed empirical input.
 

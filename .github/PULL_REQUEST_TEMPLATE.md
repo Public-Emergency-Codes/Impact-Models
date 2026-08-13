@@ -20,8 +20,8 @@
 
 ## Impact on headline outputs
 
-<!-- Report changes to means, medians, P5--P95 intervals, benefit-cost
-ratios, and any threshold probabilities affected. -->
+<!-- Report changes to means, medians, P5--P95 intervals, and any threshold
+probabilities affected. -->
 
 ## Source provenance
 

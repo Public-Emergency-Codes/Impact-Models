@@ -114,31 +114,6 @@ MEDICAL_RESOURCE_SHARES = {
     "U.S. traveler abroad": 0.55,
 }
 
-DEPLOYMENT_COST_INPUTS = {
-    "one_time_capital_and_integration": (1.0e9, 4.0e9, 12.0e9),
-    "annual_operations_training_security": (0.30e9, 1.00e9, 3.00e9),
-    "annual_replacement_and_upgrade": (0.05e9, 0.30e9, 0.90e9),
-    "public_financing_share": (0.35, 0.65, 0.90),
-    "fixed_predeployment_capital_share": (0.25, 0.40, 0.60),
-    "fixed_recurring_operations_share": (0.20, 0.35, 0.55),
-    "fixed_recurring_replacement_share": (0.20, 0.50, 0.80),
-    "near_term_deployment_maturity": (0.15, 0.30, 0.50),
-}
-
-# Scope represented only inside the aggregate pre-procurement envelopes above.
-# No line-item allocation is claimed until engineering estimates or bids exist.
-DEPLOYMENT_COST_SCOPE = (
-    "consumer-platform and operating-system integration",
-    "PSAP software, hardware, interfaces, and testing",
-    "cloud, network, storage, observability, and continuity",
-    "implementation staffing, training, and change management",
-    "cybersecurity, privacy, identity, and incident response",
-    "legal, accessibility, compliance, insurance, and liability",
-    "help desk, maintenance, vendor support, and quality assurance",
-    "public education, localization, translation, and outreach",
-    "replacement, upgrades, interoperability certification, and recertification",
-)
-
 NEAR_TERM_PATHWAY_SCALE = {
     "988/crisis connection": 1.0,
     "211 social/health referral": 0.35,

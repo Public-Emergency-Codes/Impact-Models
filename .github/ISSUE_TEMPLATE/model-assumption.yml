@@ -65,7 +65,6 @@ body:
         | Output | Current | Proposed |
         |--------|---------|----------|
         | Mean net lives | ... | ... |
-        | Median BCR | ... | ... |
 
   - type: checkboxes
     id: checklist

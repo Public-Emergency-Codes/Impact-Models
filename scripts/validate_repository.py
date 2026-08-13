@@ -254,14 +254,9 @@ def validate_structure() -> None:
         raise AssertionError("economic result release tag mismatch")
     required = {
         "direct_process_conservative_benchmark",
-        "annualized_deployment_cost",
-        "full_annualized_cost_stress",
-        "net_benefit_excluding_vsl",
-        "benefit_cost_ratio_excluding_vsl",
-        "ten_year_discounted_net_excluding_vsl",
     }
     if required - set(economic["mature"]["summaries"]):
-        raise AssertionError("economic conservative/cost outputs are incomplete")
+        raise AssertionError("economic conservative output is incomplete")
     if economic["metadata"]["primary_accounting"].find("QALYs are reported unmonetized") < 0:
         raise AssertionError("primary QALY accounting is not explicit")
     if "adverse direct-resource changes are retained fully" not in economic[
@@ -272,15 +267,6 @@ def validate_structure() -> None:
         "metadata"
     ]["public_capacity_partition"]:
         raise AssertionError("public expenditure/capacity partition is not explicit")
-    cost_inputs = economic["metadata"]["deployment_cost_inputs"]
-    for key in (
-        "fixed_predeployment_capital_share",
-        "fixed_recurring_operations_share",
-        "fixed_recurring_replacement_share",
-        "near_term_deployment_maturity",
-    ):
-        if key not in cost_inputs:
-            raise AssertionError(f"deployment cost scaling input missing: {key}")
     if len(economic["metadata"]["near_term_pathway_scale"]) != 10:
         raise AssertionError("near-term pathway scales are incomplete")
     if len(economic["metadata"]["pathway_evidence_weights"]) != 10:
@@ -337,14 +323,6 @@ def validate_structure() -> None:
         and summaries["traveler_lives"]["p95"] > 0.0
     ):
         raise AssertionError("traveler mortality is not genuinely signed")
-    if abs(
-        summaries["net_benefit_excluding_vsl"]["mean"]
-        - (
-            summaries["societal_excluding_vsl"]["mean"]
-            - summaries["annualized_deployment_cost"]["mean"]
-        )
-    ) > 1e-4:
-        raise AssertionError("economic net-benefit identity fails")
     path_rows = mature_economic["path_means"].values()
     if abs(
         sum(row["resource_total_excluding_vsl"] for row in path_rows)
@@ -384,17 +362,6 @@ def validate_structure() -> None:
             raise AssertionError(
                 "economic domestic mortality does not match mortality parameter draws"
             )
-    near_cost = economic["near_term"]["summaries"]["annualized_deployment_cost"]
-    near_full_cost = economic["near_term"]["summaries"][
-        "full_annualized_cost_stress"
-    ]
-    if near_cost["median"] >= near_full_cost["median"]:
-        raise AssertionError("near-term cost is not rollout-scaled")
-    if abs(
-        summaries["annualized_deployment_cost"]["median"]
-        - summaries["full_annualized_cost_stress"]["median"]
-    ) > 1e-6:
-        raise AssertionError("mature cost does not equal full-cost stress")
     if abs(
         sum(
             row["linear_shapley_resource_allocation"]
